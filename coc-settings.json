@@ -1,3 +1,6 @@
 {
+    "diagnostic.displayByAle": true,
+    "snippets.priority": 100,
+    "suggest.maxCompleteItemCount": 20,
     "suggest.noselect": false
 }
