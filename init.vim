@@ -37,8 +37,11 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
+let $FZF_DEFAULT_COMMAND = 'rg --files'
 let $FZF_DEFAULT_OPTS = '--reverse'
-map <C-F> :GFiles --cached --others --exclude-standard<CR>
+
+"map <C-F> :GFiles --cached --others --exclude-standard<CR>
+map <C-F> :Files<CR>
 
 " +---------------------------------
 " | Ferret - multi file search
@@ -91,7 +94,6 @@ nnoremap b0 :call lightline#bufferline#go(10)<CR>
 Plug 'qpkorr/vim-bufkill'
 
 nnoremap bd :BD<CR>
-nnoremap bdf :BD!<CR>
 
 " +---------------------------------
 " | Gutentags - ctag generator
@@ -145,10 +147,23 @@ let g:ale_linters = {
     \   'php': ['php', 'intelephense', 'phpstan']
     \ }
 
+" +---------------------------------
+" | MARKDOWN extended support 
+" +---------------------------------
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
+
+let g:vim_markdown_folding_disabled = 1         " disable folding
+let g:vim_markdown_no_default_key_mappings = 1  " no key mapping
+let g:vim_markdown_fenced_languages = ['yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini']
+
+
+
+
 call plug#end()
 
 " +=================================
-" | VIM setings
+" | VIM settings
 " +=================================
 language en_US.UTF-8
 syntax enable
@@ -156,6 +171,10 @@ syntax enable
 set backspace=2             " backspace works like most other programs
 set clipboard+=unnamedplus  " use OS clipboard instead of VIM one
 set encoding=utf-8
+
+set spell
+set spelllang=en_us,pl
+
 set hidden
 
 set showtabline=2   " always show tabline
@@ -166,6 +185,8 @@ set colorcolumn=120 " show right margin
 set nowrap          " disable code wrapping
 set whichwrap=<,>,[,]           " move left/right arrows to prev/next line
 "set keymodel=startsel,stopsel   " <Shift>-<Arrow> starts selecting text
+set scrolloff=10        " Set 7 lines to the cursor - when moving vertically
+set sidescrolloff=10    " Same horizontally (when :set nowrap)
 
 set expandtab       " tabs: spaces instead of tabs
 set shiftwidth=4    " tabs: use 4 spaces instead tab
@@ -189,14 +210,23 @@ colorscheme smyck
 " indentation with tab
 vnoremap <TAB> >gv
 vnoremap <S-TAB> <gv
+" paste in visual shortcut
+inoremap <C-P> <C-R>+
 
 " +=================================
 " | Projects settings
 " +=================================
 call project#rc("~/Projects")
 
-Project '~/Projects/inelo/dev/omni-service', 'inelo-omni'
-Callback 'inelo-omni', 'ProjectAlePHPLinters'
+Project '~/Projects/inelo/dev/fhtagn',          'inelo-fhtagn'
+Callback 'inelo-fhtagn', 'ProjectFindSkipVendor'
+
+Project '~/Projects/inelo/dev/omni-service',    'inelo-omni'
+Callback 'inelo-omni', ['ProjectAlePHPLinters', 'ProjectFindSkipVendor']
+
+function! ProjectFindSkipVendor(...) abort
+    let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!vendor/**'' '
+endfunction
 
 function! ProjectAlePHPLinters(...) abort
     let g:ale_php_phpstan_executable = 'vendor/bin/phpstan'
