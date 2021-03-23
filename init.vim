@@ -11,6 +11,7 @@ endfunction
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'lambdalisue/nerdfont.vim' " additional icons in fonts
+Plug 'Yggdroot/indentLine'      " indentation lines
 
 " +---------------------------------
 " | Projects - project view
@@ -148,7 +149,6 @@ let g:ale_linters = {
 " +---------------------------------
 " | MARKDOWN extended support 
 " +---------------------------------
-Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 
 let g:vim_markdown_folding_disabled = 1         " disable folding
