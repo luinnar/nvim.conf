@@ -1,48 +1,9 @@
 " +=================================
-" | VIM settings
+" | HELPERS
 " +=================================
-language en_US.UTF-8
-syntax enable
-
-let mapleader = ','
-
-set backspace=2             " backspace works like most other programs
-set clipboard+=unnamedplus  " use OS clipboard instead of VIM one
-set encoding=utf-8
-
-set spell
-set spelllang=en_us,pl
-set spelloptions=camel  " enable camel case spelling (nvim 0.5+)
-
-set hidden
-set updatetime=250  " frequency (in ms) of saving recovery files
-
-set showtabline=2   " always show tabline
-set number          " show line numbers
-set cursorline      " highlight current line
-set colorcolumn=120 " show right margin
-
-set nowrap          " disable code wrapping
-set whichwrap=<,>,[,]           " move left/right arrows to prev/next line
-"set keymodel=startsel,stopsel   " <Shift>-<Arrow> starts selecting text
-set scrolloff=10        " Set 7 lines to the cursor - when moving vertically
-set sidescrolloff=10    " Same horizontally (when :set nowrap)
-
-set expandtab       " tabs: spaces instead of tabs
-set shiftwidth=4    " tabs: use 4 spaces instead tab
-set tabstop=4       " tabs: displayed tab size
-set smarttab        " smarter tab placement
-
-filetype indent on
-set autoindent
-set smartindent
-set shiftround      " indentation rounded to tab size
-
-"set showmatch       " highlight matching braces
-
-set termguicolors
-set background=dark
-
+function! VimRcGetConfigDir()
+    return fnamemodify(expand($MYVIMRC), ":p:h")
+endfunction
 
 " +=================================
 " | PLUGINS
@@ -50,7 +11,6 @@ set background=dark
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'lambdalisue/nerdfont.vim' " additional icons in fonts
-
 
 " +---------------------------------
 " | Projects - project view
@@ -66,8 +26,11 @@ let g:project_use_nerdtree = 1
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
-let g:NERDTreeGitStatusUseNerdFonts = 1
 let g:NERDTreeGitStatusConcealBrackets = 1
+let g:NERDTreeGitStatusUseNerdFonts = 1
+let g:NERDTreeIgnore = ['^\.git', '^\.idea']
+let g:NERDTreeWinSize=45
+let g:NERDTreeShowHidden=1
 
 " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
 autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 | 
@@ -85,7 +48,6 @@ Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_COMMAND = 'rg --files'
 let $FZF_DEFAULT_OPTS = '--ansi --layout reverse'
 
-"map <C-F> :GFiles --cached --others --exclude-standard<CR>
 map <C-F> :Files<CR>
 
 " +---------------------------------
@@ -95,7 +57,7 @@ Plug 'wincent/ferret'
 
 let g:FerretMap = 0
 
-"nnoremap <S-F> <Plug>(FerretAck)
+nmap <S-F> <Plug>(FerretAck)
 
 " +---------------------------------
 " | LightLine - status & tab lines on steroids
@@ -167,7 +129,6 @@ let g:coc_global_extensions = [
     \   'coc-snippets'
     \]
 
-
 " snippets
 Plug 'honza/vim-snippets'
 Plug 'sniphpets/sniphpets'
@@ -204,14 +165,52 @@ let g:delimitMate_expand_cr = 1
 " +---------------------------------
 " | SKINS
 " +---------------------------------
-"Plug 'sainnhe/gruvbox-material'
 Plug 'dim13/smyck.vim'
 Plug 'morhetz/gruvbox'
 
-colorscheme smyck
-
-
 call plug#end()
+
+" +=================================
+" | VIM settings
+" +=================================
+language en_US.UTF-8
+syntax enable
+
+set backspace=2             " backspace works like most other programs
+set clipboard+=unnamedplus  " use OS clipboard instead of VIM one
+set encoding=utf-8
+
+set spell
+set spelllang=en_us,pl
+set spelloptions=camel  " enable camel case spelling (nvim 0.5+)
+
+set hidden
+set updatetime=250  " frequency (in ms) of saving recovery files
+
+set showtabline=2   " always show tabline
+set number          " show line numbers
+set cursorline      " highlight current line
+set colorcolumn=120 " show right margin
+
+set nowrap          " disable code wrapping
+set whichwrap=<,>,[,]           " move left/right arrows to prev/next line
+"set keymodel=startsel,stopsel   " <Shift>-<Arrow> starts selecting text
+set scrolloff=10        " Set 7 lines to the cursor - when moving vertically
+set sidescrolloff=10    " Same horizontally (when :set nowrap)
+
+set expandtab       " tabs: spaces instead of tabs
+set shiftwidth=4    " tabs: use 4 spaces instead tab
+set tabstop=4       " tabs: displayed tab size
+set smarttab        " smarter tab placement
+
+filetype indent on
+set autoindent
+set smartindent
+set shiftround      " indentation rounded to tab size
+
+set termguicolors
+set background=dark
+colorscheme smyck
 
 " +=================================
 " | Custom key bindings
@@ -221,7 +220,7 @@ call plug#end()
 vnoremap <TAB> >gv
 vnoremap <S-TAB> <gv
 " paste in visual shortcut
-inoremap <C-P> <C-R>+
+inoremap <C-p> <C-r>+
 
 " autocomplete menu fixes
 " - escape closes menu
@@ -231,29 +230,25 @@ imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR"
 imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
 " start autocompletion on ctrl-space
-inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <C-space> coc#refresh()
 " code actions
 nnoremap <silent>cj :call CocAction('jumpDefinition')<CR>
 nnoremap <silent>cd :call CocAction('doHover')<CR>
-"nnoremap cr :call CocAction('rename')<CR> " todo buy license
+nnoremap cr :call CocAction('rename')<CR>
+
+" NERDTree actions
+nmap tf :NERDTreeFind<CR><C-w>w
+nmap tr :NERDTreeRefreshRoot<CR><C-w>w
+nmap tt :NERDTreeFocus<CR>
 
 " +=================================
-" | Projects settings
+" | External files
 " +=================================
-call project#rc("~/Projects")
 
-Project '~/Projects/inelo/dev/fhtagn',          'inelo-fhtagn'
-Callback 'inelo-fhtagn', 'ProjectFindSkipVendor'
-
-Project '~/Projects/inelo/dev/omni-service',    'inelo-omni'
-Callback 'inelo-omni', ['ProjectAlePHPLinters', 'ProjectFindSkipVendor']
-
-function! ProjectFindSkipVendor(...) abort
-    let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!vendor/**'' '
-endfunction
-
-function! ProjectAlePHPLinters(...) abort
-    let g:ale_php_phpstan_executable = 'vendor/bin/phpstan'
-    let g:ale_php_phpstan_level = 7
-endfunction
+" intelephense key
+execute 'source ' . VimRcGetConfigDir() . '/coc-intelephense-key.vim'
+" projects functions
+execute 'source ' . VimRcGetConfigDir() . '/projects-functions.vim'
+" projects definitions
+execute 'source ' . VimRcGetConfigDir() . '/projects.vim'
 
