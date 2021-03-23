@@ -179,6 +179,7 @@ syntax enable
 set backspace=2             " backspace works like most other programs
 set clipboard+=unnamedplus  " use OS clipboard instead of VIM one
 set encoding=utf-8
+set nobackup
 
 set spell
 set spelllang=en_us,pl
@@ -187,10 +188,11 @@ set spelloptions=camel  " enable camel case spelling (nvim 0.5+)
 set hidden
 set updatetime=250  " frequency (in ms) of saving recovery files
 
-set showtabline=2   " always show tabline
-set number          " show line numbers
-set cursorline      " highlight current line
 set colorcolumn=120 " show right margin
+set cursorline      " highlight current line
+set number          " show line numbers
+set signcolumn=yes  " always show sign column
+set showtabline=2   " always show tabline
 
 set nowrap          " disable code wrapping
 set whichwrap=<,>,[,]           " move left/right arrows to prev/next line
@@ -232,9 +234,16 @@ imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 " start autocompletion on ctrl-space
 inoremap <silent><expr> <C-space> coc#refresh()
 " code actions
-nnoremap <silent>cj :call CocAction('jumpDefinition')<CR>
-nnoremap <silent>cd :call CocAction('doHover')<CR>
-nnoremap cr :call CocAction('rename')<CR>
+" - display available actions
+nmap ca <Plug>(coc-codeaction-cursor)
+" - display documentation
+nmap <silent>cd :call CocAction('doHover')<CR>
+" - jump to definition
+nmap cj <Plug>(coc-definition)
+" - rename item
+nmap cr <Plug>(coc-rename)
+" - show usage
+nmap cu <Plug>(coc-references)
 
 " NERDTree actions
 nmap tf :NERDTreeFind<CR><C-w>w
