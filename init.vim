@@ -12,6 +12,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'lambdalisue/nerdfont.vim' " additional icons in fonts
 Plug 'Yggdroot/indentLine'      " indentation lines
+Plug 'itchyny/vim-gitbranch'    " function to get current git branch
 
 " +---------------------------------
 " | Projects - project view
@@ -27,9 +28,10 @@ let g:project_use_nerdtree = 1
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
+let g:NERDTreeCascadeSingleChildDir = 0
 let g:NERDTreeGitStatusConcealBrackets = 1
 let g:NERDTreeGitStatusUseNerdFonts = 1
-let g:NERDTreeIgnore = ['^\.git', '^\.idea']
+let g:NERDTreeIgnore = ['^\.git$', '^\.idea$']
 let g:NERDTreeWinSize=45
 let g:NERDTreeShowHidden=1
 
@@ -67,11 +69,26 @@ Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
 
 let g:lightline = {
+    \   'active': {
+    \       'left': [ 
+    \           [ 'mode', 'paste' ],
+    \           [ 'readonly', 'filename', 'modified' ],
+    \       ],
+    \       'right': [
+    \           [ 'lineinfo' ],
+    \           [ 'percent' ],
+    \           [ 'fileformat', 'fileencoding', 'filetype' ],
+    \           [ 'gitbranch' ]
+    \       ]
+    \    },
     \   'tabline': {
     \       'left': [ ['buffers'] ],
     \   },
     \   'component_expand': {
     \       'buffers': 'lightline#bufferline#buffers'
+    \   },
+    \   'component_function': {
+    \       'gitbranch': 'gitbranch#name'
     \   },
     \   'component_type': {
     \       'buffers': 'tabsel'
@@ -147,20 +164,34 @@ let g:ale_linters = {
     \ }
 
 " +---------------------------------
-" | MARKDOWN extended support 
-" +---------------------------------
-Plug 'plasticboy/vim-markdown'
-
-let g:vim_markdown_folding_disabled = 1         " disable folding
-let g:vim_markdown_no_default_key_mappings = 1  " no key mapping
-let g:vim_markdown_fenced_languages = ['yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini']
-
-" +---------------------------------
 " | delimitMate - insert brackets
 " +---------------------------------
 Plug 'Raimondi/delimitMate'
 
 let g:delimitMate_expand_cr = 1
+
+" +---------------------------------
+" | CamelCaseMotion - text objects for camel case
+" +---------------------------------
+Plug 'bkad/CamelCaseMotion'
+
+" +---------------------------------
+" | MARKDOWN extended support 
+" +---------------------------------
+Plug 'plasticboy/vim-markdown'
+
+let g:vim_markdown_conceal = 0                  " disable hiding MD syntax
+let g:vim_markdown_conceal_code_blocks = 0      " disable hiding code syntax
+let g:vim_markdown_folding_disabled = 1         " disable folding
+let g:vim_markdown_no_default_key_mappings = 1  " no key mapping
+let g:vim_markdown_fenced_languages = ['yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini']
+
+" +---------------------------------
+" | PHPActor - boosted PHP support
+" +---------------------------------
+"Plug 'phpactor/phpactor', {'for': 'php', 'tag': '*', 'do': 'composer install --no-dev -o'}
+"
+"g:PhpactorRootDirectoryStrategy = function () { return getcwd() }
 
 " +---------------------------------
 " | SKINS
@@ -182,7 +213,7 @@ set encoding=utf-8
 set nobackup
 
 set spell
-set spelllang=en_us,pl
+set spelllang=en_us,en_gb,pl
 set spelloptions=camel  " enable camel case spelling (nvim 0.5+)
 
 set hidden
@@ -218,11 +249,27 @@ colorscheme smyck
 " | Custom key bindings
 " +=================================
 
+" set leader to space
+let mapleader = " "
+
 " indentation with tab
 vnoremap <TAB> >gv
 vnoremap <S-TAB> <gv
 " paste in visual shortcut
 inoremap <C-p> <C-r>+
+
+" additional motions
+" - shift arrow in insert moves with CamelCase
+imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
+imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
+" - operations in camel word
+omap <silent> cw <Plug>CamelCaseMotion_w
+xmap <silent> cw <Plug>CamelCaseMotion_w
+omap <silent> icw <Plug>CamelCaseMotion_iw
+xmap <silent> icw <Plug>CamelCaseMotion_iw
+omap <silent> icb <Plug>CamelCaseMotion_ib
+xmap <silent> icb <Plug>CamelCaseMotion_ibu
+
 
 " autocomplete menu fixes
 " - escape closes menu
@@ -231,24 +278,44 @@ imap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR"
 imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
+" buffer operations
+nnoremap <silent> bp :b#<CR>
+
+" start autocompletion on ctrl-space
 " start autocompletion on ctrl-space
 inoremap <silent><expr> <C-space> coc#refresh()
 " code actions
 " - display available actions
-nmap ca <Plug>(coc-codeaction-cursor)
+nmap <silent> <leader>ca <Plug>(coc-codeaction-cursor)
 " - display documentation
-nmap <silent>cd :call CocAction('doHover')<CR>
+nmap <silent> <leader>cd :call CocAction('doHover')<CR>
 " - jump to definition
-nmap cj <Plug>(coc-definition)
+nmap <leader>cj <Plug>(coc-definition)
 " - rename item
-nmap cr <Plug>(coc-rename)
+nmap <leader>cr <Plug>(coc-rename)
 " - show usage
-nmap cu <Plug>(coc-references)
+nmap <leader>cu <Plug>(coc-references)
 
 " NERDTree actions
-nmap tf :NERDTreeFind<CR><C-w>w
-nmap tr :NERDTreeRefreshRoot<CR><C-w>w
-nmap tt :NERDTreeFocus<CR>
+nmap <leader>tf :NERDTreeFind<CR><C-w>w
+nmap <leader>tr :NERDTreeRefreshRoot<CR>
+nmap <leader>tt :NERDTreeFocus<CR>
+
+" PHP actions
+nnoremap <leader>pa :PhpactorContextMenu 
+
+" +=================================
+" | Auto commands
+" +=================================
+
+function! LocalVimrcTrimWhitespace()
+    let l:view = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:view)
+endfunction
+
+" remove tailing whitespaces in PHP files
+autocmd BufWritePre *.php :call LocalVimrcTrimWhitespace()
 
 " +=================================
 " | External files

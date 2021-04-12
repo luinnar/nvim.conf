@@ -6,7 +6,8 @@ function! ProjectFindSkipVendor(...) abort
 endfunction
 
 function! ProjectAleLocalPhpstan(...) abort
-    let g:ale_php_phpstan_executable = 'vendor/bin/phpstan'
+    let g:ale_php_phpstan_executable = 'phpstan'
+    let g:ale_php_phpstan_configuration = expand('~/Programy/phptools/phpstan.neon')
     let g:ale_php_phpstan_level = 7
 endfunction
 
