@@ -51,16 +51,12 @@ Plug 'junegunn/fzf.vim'
 let $FZF_DEFAULT_COMMAND = 'rg --files'
 let $FZF_DEFAULT_OPTS = '--ansi --layout reverse'
 
-map <C-F> :Files<CR>
-
 " +---------------------------------
 " | Ferret - multi file search
 " +---------------------------------
 Plug 'wincent/ferret'
 
 let g:FerretMap = 0
-
-nmap <S-F> <Plug>(FerretAck)
 
 " +---------------------------------
 " | LightLine - status & tab lines on steroids
@@ -101,24 +97,11 @@ let g:lightline#bufferline#enable_nerdfont = 1
 let g:lightline#bufferline#modified = " \uf111"
 let g:lightline#bufferline#show_number = 2
 
-" switch to buffer by its ordinal ID
-nnoremap <silent>b1 :call lightline#bufferline#go(1)<CR>
-nnoremap <silent>b2 :call lightline#bufferline#go(2)<CR>
-nnoremap <silent>b3 :call lightline#bufferline#go(3)<CR>
-nnoremap <silent>b4 :call lightline#bufferline#go(4)<CR>
-nnoremap <silent>b5 :call lightline#bufferline#go(5)<CR>
-nnoremap <silent>b6 :call lightline#bufferline#go(6)<CR>
-nnoremap <silent>b7 :call lightline#bufferline#go(7)<CR>
-nnoremap <silent>b8 :call lightline#bufferline#go(8)<CR>
-nnoremap <silent>b9 :call lightline#bufferline#go(9)<CR>
-nnoremap <silent>b0 :call lightline#bufferline#go(10)<CR>
 
 " +---------------------------------
 " | BuffKill - handle buffers without changes in layout
 " +---------------------------------
 Plug 'qpkorr/vim-bufkill'
-
-nnoremap bd :BD<CR>
 
 " +---------------------------------
 " | Gutentags - ctag generator
@@ -162,6 +145,7 @@ let g:ale_linters_explicit = 1
 let g:ale_linters = {
     \   'php': ['php', 'intelephense', 'phpstan']
     \ }
+let g:ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
 
 " +---------------------------------
 " | delimitMate - insert brackets
@@ -212,6 +196,8 @@ set clipboard+=unnamedplus  " use OS clipboard instead of VIM one
 set encoding=utf-8
 set nobackup
 
+set conceallevel=0  " don't hide anything
+
 set spell
 set spelllang=en_us,en_gb,pl
 set spelloptions=camel  " enable camel case spelling (nvim 0.5+)
@@ -252,11 +238,30 @@ colorscheme smyck
 " set leader to space
 let mapleader = " "
 
+nnoremap <Home> ^
+inoremap <Home> <C-o>^
 " indentation with tab
 vnoremap <TAB> >gv
 vnoremap <S-TAB> <gv
 " paste in visual shortcut
 inoremap <C-p> <C-r>+
+
+" close buffer without changing layout
+nnoremap bd :BD<CR>
+
+" switch to buffer by its ordinal ID
+nnoremap <silent>b1 :call lightline#bufferline#go(1)<CR>
+nnoremap <silent>b2 :call lightline#bufferline#go(2)<CR>
+nnoremap <silent>b3 :call lightline#bufferline#go(3)<CR>
+nnoremap <silent>b4 :call lightline#bufferline#go(4)<CR>
+nnoremap <silent>b5 :call lightline#bufferline#go(5)<CR>
+nnoremap <silent>b6 :call lightline#bufferline#go(6)<CR>
+nnoremap <silent>b7 :call lightline#bufferline#go(7)<CR>
+nnoremap <silent>b8 :call lightline#bufferline#go(8)<CR>
+nnoremap <silent>b9 :call lightline#bufferline#go(9)<CR>
+nnoremap <silent>b0 :call lightline#bufferline#go(10)<CR>
+" jump to previous buffer
+nnoremap <silent> bp :b#<CR>
 
 " additional motions
 " - shift arrow in insert moves with CamelCase
@@ -270,7 +275,6 @@ xmap <silent> icw <Plug>CamelCaseMotion_iw
 omap <silent> icb <Plug>CamelCaseMotion_ib
 xmap <silent> icb <Plug>CamelCaseMotion_ibu
 
-
 " autocomplete menu fixes
 " - escape closes menu
 imap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
@@ -278,8 +282,6 @@ imap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR"
 imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
-" buffer operations
-nnoremap <silent> bp :b#<CR>
 
 " start autocompletion on ctrl-space
 " start autocompletion on ctrl-space
@@ -297,9 +299,14 @@ nmap <leader>cr <Plug>(coc-rename)
 nmap <leader>cu <Plug>(coc-references)
 
 " NERDTree actions
+nmap <leader>tc :NERDTreeFocus<CR>PX<C-w>w<leader>tf
 nmap <leader>tf :NERDTreeFind<CR><C-w>w
 nmap <leader>tr :NERDTreeRefreshRoot<CR>
 nmap <leader>tt :NERDTreeFocus<CR>
+
+" find operations
+nmap <leader><S-F> <Plug>(FerretAck)
+map <C-F> :Files<CR>
 
 " PHP actions
 nnoremap <leader>pa :PhpactorContextMenu 
