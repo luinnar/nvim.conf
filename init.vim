@@ -11,8 +11,14 @@ endfunction
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'lambdalisue/nerdfont.vim' " additional icons in fonts
-Plug 'Yggdroot/indentLine'      " indentation lines
 Plug 'itchyny/vim-gitbranch'    " function to get current git branch
+
+" +---------------------------------
+" | indentLine - indentation lines
+" +---------------------------------
+Plug 'Yggdroot/indentLine'
+
+let g:vim_json_conceal=0        " disable conceal for JSON files
 
 " +---------------------------------
 " | Projects - project view
@@ -31,7 +37,7 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 let g:NERDTreeCascadeSingleChildDir = 0
 let g:NERDTreeGitStatusConcealBrackets = 1
 let g:NERDTreeGitStatusUseNerdFonts = 1
-let g:NERDTreeIgnore = ['^\.git$', '^\.idea$']
+let g:NERDTreeIgnore = ['^\.git$', '^\.idea$', '__pycache__']
 let g:NERDTreeWinSize=45
 let g:NERDTreeShowHidden=1
 
@@ -127,6 +133,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 let g:coc_global_extensions = [
     \   'coc-json',
     \   'coc-phpls',
+    \   'coc-pyright',
     \   'coc-snippets'
     \]
 
@@ -143,7 +150,7 @@ Plug 'dense-analysis/ale'
 let g:ale_sign_column_always = 1
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
-    \   'php': ['php', 'intelephense', 'phpstan']
+    \   'php': ['php', 'phpstan']
     \ }
 let g:ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
 
