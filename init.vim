@@ -166,6 +166,8 @@ let g:delimitMate_expand_cr = 1
 " +---------------------------------
 Plug 'bkad/CamelCaseMotion'
 
+" +=================================
+" | LANGUAGE SPECIFIC
 " +---------------------------------
 " | MARKDOWN extended support 
 " +---------------------------------
@@ -176,6 +178,30 @@ let g:vim_markdown_conceal_code_blocks = 0      " disable hiding code syntax
 let g:vim_markdown_folding_disabled = 1         " disable folding
 let g:vim_markdown_no_default_key_mappings = 1  " no key mapping
 let g:vim_markdown_fenced_languages = ['yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini']
+
+" +=================================
+" | PYTHON
+" +---------------------------------
+" | SEMSHI - better syntax hiding for python
+" +---------------------------------
+"Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
+Plug 'vim-python/python-syntax'
+
+let g:python_highlight_all = 1
+
+" +---------------------------------
+" | PyDocString - doc-string generator 
+" +---------------------------------
+Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
+
+" +=================================
+" | PHP
+" +---------------------------------
+" | PHPFolding - extended folding support for PHP
+" +---------------------------------
+Plug 'rayburgemeestre/phpfolding.vim'
+
+let g:DisableAutoPHPFolding = 1
 
 " +---------------------------------
 " | PHPActor - boosted PHP support
