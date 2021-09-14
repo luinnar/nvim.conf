@@ -110,22 +110,6 @@ let g:lightline#bufferline#show_number = 2
 Plug 'qpkorr/vim-bufkill'
 
 " +---------------------------------
-" | Gutentags - ctag generator
-" +---------------------------------
-Plug 'ludovicchabant/vim-gutentags'
-
-let g:gutentags_cache_dir = expand('~/.local/share/nvim/tags')
-let g:gutentags_ctags_extra_args = ['--tag-relative=yes', '--fields=+ailmnS']
-
-set statusline+=%{gutentags#statusline('[',']')}
-
-augroup MyGutentagsStatusLineRefresher
-    autocmd!
-    autocmd User GutentagsUpdating call lightline#update()
-    autocmd User GutentagsUpdated call lightline#update()
-augroup END
-
-" +---------------------------------
 " | CoC - autocompletion
 " +---------------------------------
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -150,7 +134,8 @@ Plug 'dense-analysis/ale'
 let g:ale_sign_column_always = 1
 let g:ale_linters_explicit = 1
 let g:ale_linters = {
-    \   'php': ['php', 'phpstan']
+    \   'php': ['php', 'phpstan'],
+    \   'python': ['flake8']
     \ }
 let g:ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
 
