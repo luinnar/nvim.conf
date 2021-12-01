@@ -121,6 +121,9 @@ let g:coc_global_extensions = [
     \   'coc-snippets'
     \]
 
+" Show signature help on placeholder jump
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
 " snippets
 Plug 'honza/vim-snippets'
 Plug 'sniphpets/sniphpets'
@@ -165,11 +168,17 @@ let g:vim_markdown_no_default_key_mappings = 1  " no key mapping
 let g:vim_markdown_fenced_languages = ['yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini']
 
 " +=================================
+" | OPENSCAD
+" +---------------------------------
+" | Syntax highlight
+" +---------------------------------
+Plug 'sirtaj/vim-openscad'
+
+" +=================================
 " | PYTHON
 " +---------------------------------
-" | SEMSHI - better syntax hiding for python
+" | better syntax highlighting for python
 " +---------------------------------
-"Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 Plug 'vim-python/python-syntax'
 
 let g:python_highlight_all = 1
@@ -179,21 +188,7 @@ let g:python_highlight_all = 1
 " +---------------------------------
 Plug 'heavenshell/vim-pydocstring', { 'do': 'make install', 'for': 'python' }
 
-" +=================================
-" | PHP
-" +---------------------------------
-" | PHPFolding - extended folding support for PHP
-" +---------------------------------
-Plug 'rayburgemeestre/phpfolding.vim'
-
-let g:DisableAutoPHPFolding = 1
-
-" +---------------------------------
-" | PHPActor - boosted PHP support
-" +---------------------------------
-"Plug 'phpactor/phpactor', {'for': 'php', 'tag': '*', 'do': 'composer install --no-dev -o'}
-"
-"g:PhpactorRootDirectoryStrategy = function () { return getcwd() }
+let g:pydocstring_templates_path = VimRcGetConfigDir() . '/pydocstring'
 
 " +---------------------------------
 " | SKINS
@@ -302,7 +297,6 @@ imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
 
 " start autocompletion on ctrl-space
-" start autocompletion on ctrl-space
 inoremap <silent><expr> <C-space> coc#refresh()
 " code actions
 " - display available actions
@@ -315,19 +309,19 @@ nmap <leader>cj <Plug>(coc-definition)
 nmap <leader>cr <Plug>(coc-rename)
 " - show usage
 nmap <leader>cu <Plug>(coc-references)
+" PYTHON add docstring
+autocmd FileType python nnoremap <leader>cc :Pydocstring<CR>
+
 
 " NERDTree actions
 nmap <leader>tc :NERDTreeFocus<CR>PX<C-w>w<leader>tf
-nmap <leader>tf :NERDTreeFind<CR><C-w>w
-nmap <leader>tr :NERDTreeRefreshRoot<CR>
-nmap <leader>tt :NERDTreeFocus<CR>
+nnoremap <leader>tf :NERDTreeFind<CR><C-w>w
+nnoremap <leader>tr :NERDTreeRefreshRoot<CR>
+nnoremap <leader>tt :NERDTreeFocus<CR>
 
 " find operations
 nmap <leader><S-F> <Plug>(FerretAck)
 map <C-F> :Files<CR>
-
-" PHP actions
-nnoremap <leader>pa :PhpactorContextMenu 
 
 " +=================================
 " | Auto commands
@@ -339,8 +333,9 @@ function! LocalVimrcTrimWhitespace()
     call winrestview(l:view)
 endfunction
 
-" remove tailing whitespaces in PHP files
+" remove tailing whitespaces in PHP & python files
 autocmd BufWritePre *.php :call LocalVimrcTrimWhitespace()
+autocmd BufWritePre *.py :call LocalVimrcTrimWhitespace()
 
 " +=================================
 " | External files
