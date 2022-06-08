@@ -2,6 +2,7 @@
     "diagnostic.displayByAle": true,
     "snippets.priority": 100,
     "suggest.noselect": false,
+    "pyright.organizeimports.provider": "isort",
     "intelephense.stubs": [
         "apache",
         "bcmath",

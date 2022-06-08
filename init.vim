@@ -23,7 +23,8 @@ let g:vim_json_conceal=0        " disable conceal for JSON files
 " +---------------------------------
 " | Projects - project view
 " +---------------------------------
-Plug 'amiorin/vim-project'
+" Plug 'amiorin/vim-project'
+Plug 'luinnar/vim-project'
 
 let g:project_enable_welcome = 1
 let g:project_use_nerdtree = 1
@@ -130,6 +131,13 @@ Plug 'sniphpets/sniphpets'
 Plug 'sniphpets/sniphpets-common'
 
 " +---------------------------------
+" | CoC FZF
+" +---------------------------------
+Plug 'antoinemadec/coc-fzf'
+
+let g:coc_fzf_preview='right:50%'
+
+" +---------------------------------
 " | ALE - syntax checking
 " +---------------------------------
 Plug 'dense-analysis/ale'
@@ -153,6 +161,15 @@ let g:delimitMate_expand_cr = 1
 " | CamelCaseMotion - text objects for camel case
 " +---------------------------------
 Plug 'bkad/CamelCaseMotion'
+
+" +---------------------------------
+" | Spelunker.vim - better spellchecks
+" +---------------------------------
+Plug 'kamykn/spelunker.vim'
+
+let g:spelunker_check_type = 2
+let g:spelunker_spell_bad_group = 'SpellBad'
+let g:spelunker_target_min_char_len = 3
 
 " +=================================
 " | LANGUAGE SPECIFIC
@@ -193,8 +210,8 @@ let g:pydocstring_templates_path = VimRcGetConfigDir() . '/pydocstring'
 " +---------------------------------
 " | SKINS
 " +---------------------------------
-Plug 'dim13/smyck.vim'
 Plug 'morhetz/gruvbox'
+Plug 'luinnar/vim-neo-spider'
 
 call plug#end()
 
@@ -211,7 +228,7 @@ set nobackup
 
 set conceallevel=0  " don't hide anything
 
-set spell
+set nospell         " spelling check by spelunker
 set spelllang=en_us,en_gb,pl
 set spelloptions=camel  " enable camel case spelling (nvim 0.5+)
 
@@ -242,7 +259,7 @@ set shiftround      " indentation rounded to tab size
 
 set termguicolors
 set background=dark
-colorscheme smyck
+colorscheme neospider
 
 " +=================================
 " | Custom key bindings
@@ -305,6 +322,8 @@ nmap <silent> <leader>ca <Plug>(coc-codeaction-cursor)
 nmap <silent> <leader>cd :call CocAction('doHover')<CR>
 " - jump to definition
 nmap <leader>cj <Plug>(coc-definition)
+" - refactor/move item
+nmap <leader>cm <Plug>(coc-refactor)
 " - rename item
 nmap <leader>cr <Plug>(coc-rename)
 " - show usage
