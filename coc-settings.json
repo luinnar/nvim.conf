@@ -1,8 +1,20 @@
 {
     "diagnostic.displayByAle": true,
+    "inlayHint.enable": false,
     "snippets.priority": 100,
     "suggest.noselect": false,
+    "suggest.insertMode": "insert",
     "pyright.organizeimports.provider": "isort",
+    "pyright.disableProgressNotifications": true,
+    "pyright.inlayHints.enable": false,
+    "languageserver": {
+        "godot": {
+            "host": "127.0.0.1",
+            "filetypes": ["gdscript"],
+            "trace.server": "verbose",
+            "port": 6008
+        }
+    },
     "intelephense.stubs": [
         "apache",
         "bcmath",

@@ -148,7 +148,9 @@ let g:ale_linters = {
     \   'php': ['php', 'phpstan'],
     \   'python': ['flake8']
     \ }
+"    \   'python': ['ruff']
 let g:ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
+let g:ale_virtualtext_cursor = 0
 
 " +---------------------------------
 " | delimitMate - insert brackets
@@ -173,6 +175,11 @@ let g:spelunker_target_min_char_len = 3
 
 " +=================================
 " | LANGUAGE SPECIFIC
+" +---------------------------------
+" | GODOT
+" +---------------------------------
+Plug 'habamax/vim-godot'
+
 " +---------------------------------
 " | MARKDOWN extended support 
 " +---------------------------------
@@ -225,6 +232,8 @@ set backspace=2             " backspace works like most other programs
 set clipboard+=unnamedplus  " use OS clipboard instead of VIM one
 set encoding=utf-8
 set nobackup
+
+set mouse=
 
 set conceallevel=0  " don't hide anything
 
@@ -309,9 +318,15 @@ xmap <silent> icb <Plug>CamelCaseMotion_ibu
 " - escape closes menu
 imap <expr> <Esc> pumvisible() ? "\<C-e>" : "\<Esc>"
 " - enter and tab selects option & <CR> uses delimitMate expansion
-imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR"
-imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
+"imap <expr> <CR> pumvisible() ? "\<C-y>" : "\<Plug>delimitMateCR"
+"imap <expr> <TAB> pumvisible() ? "\<C-y>" : "\<TAB>"
 
+" CocNvim - use tab & enter to navigate
+inoremap <silent><expr> <TAB>
+        \ coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <silent><expr> <CR>
+        \ coc#pum#visible() ? coc#pum#confirm() :
+        \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " start autocompletion on ctrl-space
 inoremap <silent><expr> <C-space> coc#refresh()

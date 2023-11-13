@@ -19,5 +19,5 @@ function! ProjectVirtualenv(...) abort
     call coc#config('python.pythonPath', fnamemodify('venv/bin/python', ':p'))
     call coc#config('python.venvPath', fnamemodify('venv', ':p'))
     " skip venv dir in FZF search
-    let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!venv/**'' '
+    let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!venv/**'' -g ''!*.pyc'' '
 endfunction
