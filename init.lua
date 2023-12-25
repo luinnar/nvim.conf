@@ -74,7 +74,7 @@ add_init(function()
             },
             mappings = {
                 i = {
-                    --['<esc>'] = actions.close
+                    ['<esc>'] = actions.close
                 }
             },
         },
@@ -130,11 +130,6 @@ vim.g.lightline = {
             {'gitbranch'}
         }
     },
-    bufferline = {
-        enable_nerdfont = 1,
-        modified = " \u{f111}",
-        show_number = 2
-    },
     tabline = {
         left = {
             {'buffers'}
@@ -153,10 +148,53 @@ vim.g.lightline = {
     subseparator = {left = "\u{e0b9}", right = "\u{e0bd}"}
 }
 
+vim.g['lightline#bufferline#enable_nerdfont'] = 1
+vim.g['lightline#bufferline#modified'] = ' \u{f111}'
+vim.g['lightline#bufferline#show_number'] = 2
+
 -- +---------------------------------
 -- | BuffKill - handle buffers without changes in layout
 -- +---------------------------------
 Plug('qpkorr/vim-bufkill')
+
+
+-- +---------------------------------
+-- | nvim-lspconfig - LSP support
+-- +---------------------------------
+--[[
+Plug('neovim/nvim-lspconfig')
+Plug('ms-jpq/coq_nvim', {branch = 'coq', ['do'] = 'python3 -m coq deps'})
+Plug('ms-jpq/coq.artifacts', {branch = 'artifacts'})
+
+vim.g.coq_settings = {
+    auto_start = 'shut-up',
+    keymap = {
+        pre_select = true,
+    },
+}
+
+add_init(function()
+    local lspconfig = require('lspconfig')
+    local coq = require('coq')
+
+    lspconfig.pyright.setup(
+        coq.lsp_ensure_capabilities({})
+    )
+
+    vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+        callback = function(ev)
+            -- Enable completion triggered by <c-x><c-o>
+            vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+            vim.keymap.set('i', 'C-<space>', '<C-x><C-o>')
+
+            -- Buffer local mappings
+            local opts = { buffer = ev.buf }
+        end,
+    })
+end)
+]]--
 
 -- +---------------------------------
 -- | CoC - autocompletion
@@ -164,14 +202,18 @@ Plug('qpkorr/vim-bufkill')
 Plug('neoclide/coc.nvim', {branch = 'release'})
 
 vim.g.coc_global_extensions = {
-   'coc-json',
-   'coc-phpls',
-   'coc-pyright',
-   'coc-snippets'
+    'coc-elixir',
+    'coc-json',
+    'coc-phpls',
+    'coc-pyright',
+    'coc-snippets'
 }
 
 -- Show signature help on placeholder jump
---autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+vim.api.nvim_create_autocmd('User', {
+    pattern = 'CocJumpPlaceholder',
+    command = "call CocActionAsync('showSignatureHelp')"
+})
 
 -- snippets
 Plug('honza/vim-snippets')
@@ -223,6 +265,11 @@ vim.g.spelunker_target_min_char_len = 3
 
 -- +=================================
 -- | LANGUAGE SPECIFIC
+-- +---------------------------------
+-- | Elixir
+-- +---------------------------------
+Plug('elixir-editors/vim-elixir')
+
 -- +---------------------------------
 -- | GODOT
 -- +---------------------------------
@@ -412,7 +459,7 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- NERDTree actions
-vim.keymap.set('n', '<leader>tc', ':NERDTreeFocus<CR>PX<C-w>w<leader>tf')
+vim.keymap.set('n', '<leader>tc', ':NERDTreeFocus<CR>PX<C-w>w<leader>tf', {remap = true})
 vim.keymap.set('n', '<leader>tf', ':NERDTreeFind<CR><C-w>w')
 vim.keymap.set('n', '<leader>tr', ':NERDTreeRefreshRoot<CR>')
 vim.keymap.set('n', '<leader>tt', ':NERDTreeFocus<CR>')
@@ -427,12 +474,27 @@ for i, init_fn in ipairs(init_functions) do
     init_fn()
 end
 
+
+-- +=================================
+-- | Auto commands
+-- +=================================
+
+-- remove tailing whitespaces in PHP & python files
+vim.api.nvim_create_autocmd('BufWritePre', {
+    pattern = {'*.php', '*.py'},
+    callback = function()
+        local view = vim.fn.winsaveview()
+        vim.cmd('keeppatterns %s/\\s\\+$//e')
+        vim.fn.winrestview(view)
+    end
+})
+
 -- +=================================
 -- | External files
 -- +=================================
 
 -- intelephense key
-vim.cmd('source ' .. vim.fn.stdpath('config') .. '/coc-intelephense-key.vim')
+--vim.cmd('source ' .. vim.fn.stdpath('config') .. '/coc-intelephense-key.vim')
 -- projects functions
 vim.cmd('source ' .. vim.fn.stdpath('config') .. '/projects-functions.vim')
 -- projects definitions

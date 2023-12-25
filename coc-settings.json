@@ -4,9 +4,13 @@
     "snippets.priority": 100,
     "suggest.noselect": false,
     "suggest.insertMode": "insert",
+
+    "elixir.pathToElixirLS": "~/Programy/elixir/elixir-ls/release/language_server.sh",
+
     "pyright.organizeimports.provider": "isort",
     "pyright.disableProgressNotifications": true,
     "pyright.inlayHints.enable": false,
+
     "languageserver": {
         "godot": {
             "host": "127.0.0.1",
