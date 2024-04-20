@@ -157,6 +157,18 @@ vim.g['lightline#bufferline#show_number'] = 2
 -- +---------------------------------
 Plug('qpkorr/vim-bufkill')
 
+-- +---------------------------------
+-- | conform.nvim - code formatting
+-- +---------------------------------
+Plug('stevearc/conform.nvim')
+
+add_init(function()
+    require("conform").setup({
+        formatters_by_ft = {
+            python = {"isort", "black"},
+        },
+    })
+end)
 
 -- +---------------------------------
 -- | nvim-lspconfig - LSP support
@@ -202,8 +214,10 @@ end)
 Plug('neoclide/coc.nvim', {branch = 'release'})
 
 vim.g.coc_global_extensions = {
+    'coc-css',
     'coc-elixir',
     'coc-json',
+    'coc-lua',
     'coc-phpls',
     'coc-pyright',
     'coc-snippets'
@@ -308,6 +322,13 @@ vim.g.python_highlight_all = 1
 Plug('heavenshell/vim-pydocstring', {['do'] = 'make install', ['for'] = 'python' })
 
 vim.g.pydocstring_templates_path = vim.fn.stdpath('config') .. '/pydocstring'
+
+-- +=================================
+-- | Zig
+-- +---------------------------------
+-- | syntax highlighting for Zig
+-- +---------------------------------
+Plug('ziglang/zig.vim')
 
 -- +---------------------------------
 -- | SKINS
@@ -442,6 +463,8 @@ end, {expr = true, silent = true})
 vim.keymap.set('n', '<leader>ca', '<Plug>(coc-codeaction-cursor)', {silent = true})
 -- * display documentation
 vim.keymap.set('n', '<leader>cd', ':call CocAction("doHover")<CR>', {silent = true})
+-- * format current buffer
+vim.keymap.set('n', '<leader>cf', ':lua require("conform").format()<CR>', {silent = true})
 -- * jump to definition
 vim.keymap.set('n', '<leader>cj', '<Plug>(coc-definition)')
 -- * refactor/move item

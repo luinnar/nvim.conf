@@ -11,12 +11,19 @@
     "pyright.disableProgressNotifications": true,
     "pyright.inlayHints.enable": false,
 
+    "zig.enabled": true,
+    "zig.path": "zls",
+
     "languageserver": {
         "godot": {
             "host": "127.0.0.1",
             "filetypes": ["gdscript"],
             "trace.server": "verbose",
             "port": 6008
+        },
+        "zig": {
+            "command": "zls",
+            "filetypes": ["zig"]
         }
     },
     "intelephense.stubs": [
@@ -92,5 +99,6 @@
         "Zend OPcache",
         "zip",
         "zlib"
-    ]
+    ],
+    "zig.zls.path": "/home/luinnar/.config/coc/extensions/coc-zls-data/zls_install/zls"
 }

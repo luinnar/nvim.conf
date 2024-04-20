@@ -15,6 +15,8 @@ endfunction
 
 " Python
 function! ProjectVirtualenv(...) abort
+    " add virtualenv to PATH
+    let $PATH = fnamemodify('venv/bin', ':p') . ':' . $PATH
     " set virtualenv path for CoC
     call coc#config('python.pythonPath', fnamemodify('venv/bin/python', ':p'))
     call coc#config('python.venvPath', fnamemodify('venv', ':p'))
