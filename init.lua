@@ -33,20 +33,68 @@ vim.g.vim_json_conceal = 0        -- disable conceal for JSON files
 Plug('luinnar/vim-project')
 
 vim.g.project_enable_welcome = 1
-vim.g.project_use_nerdtree = 1
+vim.g.project_use_neotree = 1
+
+-- +---------------------------------
+-- | Neo-tree - file browser
+-- +---------------------------------
+Plug('MunifTanjim/nui.nvim')
+Plug('nvim-neo-tree/neo-tree.nvim')
+
+add_init(function()
+    require("neo-tree").setup({
+        default_component_configs = {
+            name = {
+                trailing_slash = true,
+                use_git_status_colors = false,
+            },
+            git_status = {
+                symbols = {
+                    untracked = "",
+                    ignored   = "󰄱",
+                    unstaged  = "",
+                    staged    = "",
+                    conflict  = "󰈅",
+                }
+            }
+        },
+        window = {
+            width = 45,
+        },
+        filesystem = {
+            filtered_items = {
+                visible = true,
+                hide_dotfiles = false,
+                hide_gitignored = false,
+                never_show = {
+                    ".git",
+                    "__pycache__",
+                },
+                never_show_by_pattern = {
+                    "*.pyc",
+                },
+            },
+            follow_current_file = {
+                enabled = true,
+                leave_dirs_open = false,
+            },
+            use_libuv_file_watcher = true,
+        },
+    })
+end)
 
 -- +---------------------------------
 -- | NERDTree - file browser
 -- +---------------------------------
-Plug('preservim/nerdtree')
-Plug('Xuyuanp/nerdtree-git-plugin')
-
-vim.g.NERDTreeCascadeSingleChildDir = 0
-vim.g.NERDTreeGitStatusConcealBrackets = 1
-vim.g.NERDTreeGitStatusUseNerdFonts = 1
-vim.g.NERDTreeIgnore = {'^\\.git$', '^\\.idea$', '__pycache__'}
-vim.g.NERDTreeWinSize = 45
-vim.g.NERDTreeShowHidden = 1
+-- Plug('preservim/nerdtree')
+-- Plug('Xuyuanp/nerdtree-git-plugin')
+-- 
+-- vim.g.NERDTreeCascadeSingleChildDir = 0
+-- vim.g.NERDTreeGitStatusConcealBrackets = 1
+-- vim.g.NERDTreeGitStatusUseNerdFonts = 1
+-- vim.g.NERDTreeIgnore = {'^\\.git$', '^\\.idea$', '__pycache__'}
+-- vim.g.NERDTreeWinSize = 45
+-- vim.g.NERDTreeShowHidden = 1
 
 --[[
 -- If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
@@ -482,10 +530,13 @@ vim.api.nvim_create_autocmd('FileType', {
 })
 
 -- NERDTree actions
-vim.keymap.set('n', '<leader>tc', ':NERDTreeFocus<CR>PX<C-w>w<leader>tf', {remap = true})
-vim.keymap.set('n', '<leader>tf', ':NERDTreeFind<CR><C-w>w')
-vim.keymap.set('n', '<leader>tr', ':NERDTreeRefreshRoot<CR>')
-vim.keymap.set('n', '<leader>tt', ':NERDTreeFocus<CR>')
+-- vim.keymap.set('n', '<leader>tc', ':NERDTreeFocus<CR>PX<C-w>w<leader>tf', {remap = true})
+-- vim.keymap.set('n', '<leader>tf', ':NERDTreeFind<CR><C-w>w')
+-- vim.keymap.set('n', '<leader>tr', ':NERDTreeRefreshRoot<CR>')
+-- vim.keymap.set('n', '<leader>tt', ':NERDTreeFocus<CR>')
+--
+-- Neotree actions
+vim.keymap.set('n', '<leader>tt', ':Neotree focus<CR>')
 
 -- find operations
 vim.keymap.set('n', '<leader><S-F>', '<Plug>(FerretAck)')
