@@ -11,8 +11,10 @@
     "pyright.disableProgressNotifications": true,
     "pyright.inlayHints.enable": false,
 
-    "zig.enabled": true,
-    "zig.path": "zls",
+    "zig": {
+        "enabled": true,
+        "path": "zls"
+    },
 
     "languageserver": {
         "godot": {

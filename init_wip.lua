@@ -43,8 +43,6 @@ Plug('nvim-neo-tree/neo-tree.nvim')
 
 add_init(function()
     require("neo-tree").setup({
-        enable_diagnostics = false,
-        use_popups_for_input = false,
         default_component_configs = {
             name = {
                 trailing_slash = true,
@@ -194,14 +192,110 @@ add_init(function()
     require('conform').setup({
         formatters_by_ft = {
             lua = {},
-            python = {'isort', 'ruff_format'},
+            python = {'isort', 'black'},
         },
     })
 end)
 
 -- +---------------------------------
+-- | nvim-lspconfig - LSP support
+-- +---------------------------------
+Plug('onsails/lspkind.nvim')
+Plug('neovim/nvim-lspconfig')
+Plug('hrsh7th/cmp-buffer')      -- use words from buffer
+Plug('hrsh7th/cmp-nvim-lsp')    -- use LSP data
+Plug('hrsh7th/cmp-path')        -- use paths
+Plug('hrsh7th/nvim-cmp')
+-- lua snippets & cmp source
+Plug('L3MON4D3/LuaSnip', {['tag'] = 'v2.*', ['do'] = 'make install_jsregexp'})
+Plug('saadparwaiz1/cmp_luasnip')
+Plug('honza/vim-snippets')
+
+add_init(function()
+    local lspconfig = require('lspconfig')
+    --local luasnip = require('luasnip')
+    local cmp = require('cmp')
+
+    -- load nice icons
+    local lspkind = require('lspkind')
+    lspkind.init({})
+
+    -- load snippets
+    require("luasnip.loaders.from_snipmate").lazy_load()
+
+    cmp.setup({
+        completion = {
+            completeopt = 'menu,menuone,noinsert'
+        },
+        formatting = {
+            format = lspkind.cmp_format({
+                mode = 'symbol',
+                maxwidth = 50,
+                ellipsis_char = '...',
+                show_labelDetails = true,
+            }),
+        },
+        sources = {
+            {name = "nvim_lsp"},
+            {name = "cody"},
+            {name = "path"},
+            {name = "buffer"},
+        },
+        --[[
+        mapping = {
+            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<Esc>'] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.mapping.abort()
+                else
+                    fallback()
+                end
+            end),
+            ['<CR>'] = cmp.mapping(function (fallback)
+                if cmp.visible() then
+                    cmp.mapping.confirm({ select = true })
+                else
+                    fallback()
+                end
+            end),
+        },
+        ]]
+        -- Enable luasnip to handle snippet expansion for nvim-cmp
+        snippet = {
+            expand = function(args)
+                vim.snippet.expand(args.body)
+            end,
+        },
+    })
+
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    -- lspconfig.elixirls.setup({})
+    -- lspconfig.jsonls.setup{}
+    -- lspconfig.lua_ls.setup({})
+
+    lspconfig.pyright.setup(capabilities)
+
+    --[[
+    vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+        callback = function(ev)
+            -- Enable completion triggered by <c-x><c-o>
+            vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+            vim.keymap.set('i', 'C-<space>', '<C-x><C-o>')
+
+            -- Buffer local mappings
+            local opts = { buffer = ev.buf }
+        end,
+    })
+    ]]--
+end)
+
+-- +---------------------------------
 -- | CoC - autocompletion
 -- +---------------------------------
+--[[
 Plug('neoclide/coc.nvim', {branch = 'release'})
 
 vim.g.coc_global_extensions = {
@@ -231,6 +325,7 @@ Plug('sniphpets/sniphpets-common')
 Plug('antoinemadec/coc-fzf')
 
 vim.g.coc_fzf_preview='right:50%'
+]]
 
 -- +---------------------------------
 -- | ALE - syntax checking
@@ -243,6 +338,7 @@ vim.g.ale_linters = {
     php = {'php', 'phpstan'},
     python = {'flake8'}
 }
+--    \   'python': ['ruff']
 vim.g.ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
 vim.g.ale_virtualtext_cursor = 0
 
@@ -357,7 +453,6 @@ vim.opt.updatetime = 250  -- frequency (in ms) of saving recovery files
 vim.opt.colorcolumn = '120' -- show right margin
 vim.opt.cursorline = true   -- highlight current line
 vim.opt.number = true       -- show line numbers
-vim.opt.relativenumber = true -- show relative line number and current line number
 vim.opt.signcolumn = 'yes'  -- always show sign column
 vim.opt.showtabline = 2     -- always show tabline
 
@@ -397,21 +492,21 @@ vim.keymap.set('v', '<S-TAB>', '<gv')
 vim.keymap.set('i', '<C-p>', '<C-r>+')
 
 -- close buffer without changing layout
-vim.keymap.set('n', '<leader>bd', ':BD<CR>')
+vim.keymap.set('n', 'bd', ':BD<CR>')
 
 -- switch to buffer by its ordinal ID
-vim.keymap.set('n', '<leader>b1', ':call lightline#bufferline#go(1)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b2', ':call lightline#bufferline#go(2)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b3', ':call lightline#bufferline#go(3)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b4', ':call lightline#bufferline#go(4)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b5', ':call lightline#bufferline#go(5)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b6', ':call lightline#bufferline#go(6)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b7', ':call lightline#bufferline#go(7)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b8', ':call lightline#bufferline#go(8)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b9', ':call lightline#bufferline#go(9)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b0', ':call lightline#bufferline#go(10)<CR>', {silent = true})
+vim.keymap.set('n', 'b1', ':call lightline#bufferline#go(1)<CR>', {silent = true})
+vim.keymap.set('n', 'b2', ':call lightline#bufferline#go(2)<CR>', {silent = true})
+vim.keymap.set('n', 'b3', ':call lightline#bufferline#go(3)<CR>', {silent = true})
+vim.keymap.set('n', 'b4', ':call lightline#bufferline#go(4)<CR>', {silent = true})
+vim.keymap.set('n', 'b5', ':call lightline#bufferline#go(5)<CR>', {silent = true})
+vim.keymap.set('n', 'b6', ':call lightline#bufferline#go(6)<CR>', {silent = true})
+vim.keymap.set('n', 'b7', ':call lightline#bufferline#go(7)<CR>', {silent = true})
+vim.keymap.set('n', 'b8', ':call lightline#bufferline#go(8)<CR>', {silent = true})
+vim.keymap.set('n', 'b9', ':call lightline#bufferline#go(9)<CR>', {silent = true})
+vim.keymap.set('n', 'b0', ':call lightline#bufferline#go(10)<CR>', {silent = true})
 -- jump to previous buffer
-vim.keymap.set('n', '<leader>bp', ':b#<CR>', {silent = true})
+vim.keymap.set('n', 'bp', ':b#<CR>', {silent = true})
 
 -- additional motions
 -- - shift arrow in insert moves with CamelCase
@@ -428,32 +523,42 @@ vim.keymap.set('x', 'icb', '<Plug>CamelCaseMotion_ibu', {silent = true})
 -- autocomplete menu fixes:
 -- * escape closes menu
 vim.keymap.set('i', '<Esc>', function()
-    if vim.fn.pumvisible() == 1 then
-        return '<C-e>'
+    local cmp = require("cmp")
+
+    if cmp.visible() then
+        return cmp.abort()
     end
+
     return '<Esc>'
 end, {expr = true})
 
--- CocNvim - use tab & enter to navigate
+-- nvim-cmp - use tab & enter to navigate
 vim.keymap.set('i', '<TAB>', function()
-    if vim.fn['coc#pum#visible']() == 1 then
-        return vim.fn['coc#pum#next'](1)
+    local cmp = require("cmp")
+
+    if cmp.visible() then
+        return cmp.select_next_item()
     end
+
     return '<TAB>'
 end, {expr = true, silent = true})
 
 vim.keymap.set('i', '<CR>', function()
-    if vim.fn['coc#pum#visible']() == 1 then
-        return vim.fn['coc#pum#confirm']()
+    local cmp = require("cmp")
+
+    if cmp.visible() then
+        return cmp.confirm({ select = true })
     end
+
     return '<CR>'
 end, {expr = true, silent = true})
 
 -- * start autocompletion on ctrl-space
 vim.keymap.set('i', '<C-space>', function()
-    return vim.fn['coc#refresh']()
+    return require("cmp").complete()
 end, {expr = true, silent = true})
 
+--[[
 -- code actions:
 -- * display available actions
 vim.keymap.set('n', '<leader>ca', '<Plug>(coc-codeaction-cursor)', {silent = true})
@@ -479,7 +584,18 @@ vim.keymap.set('n', '<leader>cm', '<Plug>(coc-refactor)')
 vim.keymap.set('n', '<leader>cr', '<Plug>(coc-rename)')
 -- * show usage
 vim.keymap.set('n', '<leader>cu', '<Plug>(coc-references)')
+]]--
 
+-- * format current buffer
+vim.keymap.set(
+    'n', '<leader>cf',
+    function()
+        if not require('conform').format() then
+            print("Buffer formatted")
+        end
+    end,
+    {silent = true}
+)
 -- * PYTHON add docstring
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'python',
@@ -496,7 +612,7 @@ vim.keymap.set('n', '<leader><S-F>', '<Plug>(FerretAck)')
 
 
 -- run all initializers
-for i, init_fn in ipairs(init_functions) do
+for _, init_fn in ipairs(init_functions) do
     init_fn()
 end
 
@@ -525,8 +641,3 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 vim.cmd('source ' .. vim.fn.stdpath('config') .. '/projects-functions.vim')
 -- projects definitions
 vim.cmd('source ' .. vim.fn.stdpath('config') .. '/projects.vim')
-
-
-
--- Nvim lag fix
-vim.cmd('hi! link CurSearch Search')
