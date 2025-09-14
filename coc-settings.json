@@ -11,9 +11,9 @@
     "pyright.disableProgressNotifications": true,
     "pyright.inlayHints.enable": false,
 
-    "zig": {
-        "enabled": true,
-        "path": "zls"
+    "[zig]": {
+        "inlayHint.enable": false,
+        "semanticTokens.enable": true
     },
 
     "languageserver": {
@@ -25,7 +25,7 @@
         },
         "zig": {
             "command": "zls",
-            "filetypes": ["zig"]
+            "filetypes": ["zig", "zon"]
         }
     },
     "intelephense.stubs": [

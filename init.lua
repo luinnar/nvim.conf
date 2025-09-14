@@ -15,16 +15,16 @@ end
 -- +=================================
 vim.call('plug#begin', '~/.local/share/nvim/plugged')
 
-Plug('nvim-lua/plenary.nvim')       -- utilities functions for LUA projects
-Plug('lambdalisue/nerdfont.vim')    -- additional icons in fonts
-Plug('itchyny/vim-gitbranch')       -- function to get current git branch
+Plug('nvim-lua/plenary.nvim')    -- utilities functions for LUA projects
+Plug('lambdalisue/nerdfont.vim') -- additional icons in fonts
+Plug('itchyny/vim-gitbranch')    -- function to get current git branch
 
 -- +---------------------------------
 -- | indentLine - indentation lines
 -- +---------------------------------
 Plug('Yggdroot/indentLine')
 
-vim.g.vim_json_conceal = 0        -- disable conceal for JSON files
+vim.g.vim_json_conceal = 0 -- disable conceal for JSON files
 
 -- +---------------------------------
 -- | Projects - project view
@@ -88,8 +88,8 @@ end)
 -- +---------------------------------
 -- | telescope.nvim - search everywhere
 -- +---------------------------------
-Plug('nvim-telescope/telescope.nvim', {tag = '0.1.4'})
-Plug('nvim-telescope/telescope-fzf-native.nvim', {['do'] = 'make'})
+Plug('nvim-telescope/telescope.nvim', { tag = '0.1.4' })
+Plug('nvim-telescope/telescope-fzf-native.nvim', { ['do'] = 'make' })
 
 add_init(function()
     local actions = require('telescope.actions')
@@ -108,9 +108,9 @@ add_init(function()
         },
         extensions = {
             fzf = {
-                fuzzy = true,                    -- false will only do exact matching
-                override_generic_sorter = true,  -- override the generic sorter
-                override_file_sorter = true,     -- override the file sorter
+                fuzzy = true,                   -- false will only do exact matching
+                override_generic_sorter = true, -- override the generic sorter
+                override_file_sorter = true,    -- override the file sorter
             },
         },
     })
@@ -126,7 +126,7 @@ end)
 -- +---------------------------------
 -- | FZF - fuzzy search
 -- +---------------------------------
-Plug('junegunn/fzf', {['do'] = vim.fn['fzf#install']})
+Plug('junegunn/fzf', { ['do'] = vim.fn['fzf#install'] })
 Plug('junegunn/fzf.vim')
 
 vim.env.FZF_DEFAULT_COMMAND = 'rg --files'
@@ -148,19 +148,19 @@ Plug('mengelbrecht/lightline-bufferline')
 vim.g.lightline = {
     active = {
         left = {
-            {'mode', 'paste'},
-            {'readonly', 'filename', 'modified'},
+            { 'mode',     'paste' },
+            { 'readonly', 'filename', 'modified' },
         },
         right = {
-            {'lineinfo'},
-            {'percent'},
-            {'fileformat', 'fileencoding', 'filetype'},
-            {'gitbranch'}
+            { 'lineinfo' },
+            { 'percent' },
+            { 'fileformat', 'fileencoding', 'filetype' },
+            { 'gitbranch' }
         }
     },
     tabline = {
         left = {
-            {'buffers'}
+            { 'buffers' }
         },
     },
     component_expand = {
@@ -172,8 +172,8 @@ vim.g.lightline = {
     component_type = {
         buffers = 'tabsel'
     },
-    separator = {left = "\u{e0b8}", right = "\u{e0ba}"},
-    subseparator = {left = "\u{e0b9}", right = "\u{e0bd}"}
+    separator = { left = "\u{e0b8}", right = "\u{e0ba}" },
+    subseparator = { left = "\u{e0b9}", right = "\u{e0bd}" }
 }
 
 vim.g['lightline#bufferline#enable_nerdfont'] = 1
@@ -194,7 +194,8 @@ add_init(function()
     require('conform').setup({
         formatters_by_ft = {
             lua = {},
-            python = {'isort', 'ruff_format'},
+            python = { 'isort', 'ruff_format' },
+            zig = { 'zigfmt' },
         },
     })
 end)
@@ -202,7 +203,7 @@ end)
 -- +---------------------------------
 -- | CoC - autocompletion
 -- +---------------------------------
-Plug('neoclide/coc.nvim', {branch = 'release'})
+Plug('neoclide/coc.nvim', { branch = 'release' })
 
 vim.g.coc_global_extensions = {
     'coc-css',
@@ -210,7 +211,8 @@ vim.g.coc_global_extensions = {
     'coc-json',
     'coc-lua',
     'coc-phpls',
-    'coc-pyright',
+    -- 'coc-pyright',
+    'coc-basedpyright',
     'coc-snippets'
 }
 
@@ -230,7 +232,7 @@ Plug('sniphpets/sniphpets-common')
 -- +---------------------------------
 Plug('antoinemadec/coc-fzf')
 
-vim.g.coc_fzf_preview='right:50%'
+vim.g.coc_fzf_preview = 'right:50%'
 
 -- +---------------------------------
 -- | ALE - syntax checking
@@ -240,8 +242,8 @@ Plug('dense-analysis/ale')
 vim.g.ale_sign_column_always = 1
 vim.g.ale_linters_explicit = 1
 vim.g.ale_linters = {
-    php = {'php', 'phpstan'},
-    python = {'flake8'}
+    php = { 'php', 'phpstan' },
+    python = { 'flake8' }
 }
 vim.g.ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
 vim.g.ale_virtualtext_cursor = 0
@@ -267,6 +269,22 @@ vim.g.spelunker_check_type = 2
 vim.g.spelunker_spell_bad_group = 'SpellBad'
 vim.g.spelunker_target_min_char_len = 3
 
+-- +---------------------------------
+-- | auto.session - save sessions
+-- +---------------------------------
+-- Plug('rmagatti/auto-session')
+--
+-- add_init(function()
+--     require("auto-session").setup({
+--         auto_restore = false,
+--         cwd_change_handling = true,
+--         pre_save_cmds = { 'Neotree close' },
+--         --post_restore_cmds = { 'Neotree focus' },
+--     })
+-- end)
+--
+-- vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 -- +=================================
 -- | LANGUAGE SPECIFIC
 -- +---------------------------------
@@ -289,11 +307,11 @@ Plug('habamax/vim-godot')
 -- +---------------------------------
 Plug('plasticboy/vim-markdown')
 
-vim.g.vim_markdown_conceal = 0                  -- disable hiding MD syntax
-vim.g.vim_markdown_conceal_code_blocks = 0      -- disable hiding code syntax
-vim.g.vim_markdown_folding_disabled = 1         -- disable folding
-vim.g.vim_markdown_no_default_key_mappings = 1  -- no key mapping
-vim.g.vim_markdown_fenced_languages = {'yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini'}
+vim.g.vim_markdown_conceal = 0                 -- disable hiding MD syntax
+vim.g.vim_markdown_conceal_code_blocks = 0     -- disable hiding code syntax
+vim.g.vim_markdown_folding_disabled = 1        -- disable folding
+vim.g.vim_markdown_no_default_key_mappings = 1 -- no key mapping
+vim.g.vim_markdown_fenced_languages = { 'yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini' }
 
 -- +=================================
 -- | OPENSCAD
@@ -314,7 +332,7 @@ vim.g.python_highlight_all = 1
 -- +---------------------------------
 -- | PyDocString - doc-string generator
 -- +---------------------------------
-Plug('heavenshell/vim-pydocstring', {['do'] = 'make install', ['for'] = 'python' })
+Plug('heavenshell/vim-pydocstring', { ['do'] = 'make install', ['for'] = 'python' })
 
 vim.g.pydocstring_templates_path = vim.fn.stdpath('config') .. '/pydocstring'
 
@@ -324,6 +342,9 @@ vim.g.pydocstring_templates_path = vim.fn.stdpath('config') .. '/pydocstring'
 -- | syntax highlighting for Zig
 -- +---------------------------------
 Plug('ziglang/zig.vim')
+
+vim.g.zig_fmt_parse_errors = 0
+vim.g.zig_fmt_autosave = 0
 
 -- +---------------------------------
 -- | SKINS
@@ -338,43 +359,43 @@ vim.call('plug#end')
 -- +=================================
 vim.api.nvim_exec('language en_US.UTF-8', true)
 
-vim.opt.backspace = 'indent,eol,start'  -- backspace works like most other programs
-vim.opt.clipboard = 'unnamedplus'       -- use OS clipboard instead of VIM one
+vim.opt.backspace = 'indent,eol,start' -- backspace works like most other programs
+vim.opt.clipboard = 'unnamedplus'      -- use OS clipboard instead of VIM one
 vim.opt.encoding = 'utf-8'
 vim.opt.backup = false
 
 vim.opt.mouse = ''
 
-vim.opt.conceallevel = 0    -- don't hide anything
+vim.opt.conceallevel = 0       -- don't hide anything
 
-vim.opt.spell = false       -- spelling check by spelunker
+vim.opt.spell = false          -- spelling check by spelunker
 vim.opt.spelllang = 'en_us,en_gb,pl'
-vim.opt.spelloptions = 'camel'  -- enable camel case spelling (nvim 0.5+)
+vim.opt.spelloptions = 'camel' -- enable camel case spelling (nvim 0.5+)
 
 vim.opt.hidden = true
-vim.opt.updatetime = 250  -- frequency (in ms) of saving recovery files
+vim.opt.updatetime = 250      -- frequency (in ms) of saving recovery files
 
-vim.opt.colorcolumn = '120' -- show right margin
-vim.opt.cursorline = true   -- highlight current line
-vim.opt.number = true       -- show line numbers
+vim.opt.colorcolumn = '120'   -- show right margin
+vim.opt.cursorline = true     -- highlight current line
+vim.opt.number = true         -- show line numbers
 vim.opt.relativenumber = true -- show relative line number and current line number
-vim.opt.signcolumn = 'yes'  -- always show sign column
-vim.opt.showtabline = 2     -- always show tabline
+vim.opt.signcolumn = 'yes'    -- always show sign column
+vim.opt.showtabline = 2       -- always show tabline
 
-vim.opt.wrap = false        -- disable code wrapping
-vim.opt.whichwrap = '<,>,[,]'   -- move left/right arrows to prev/next line
-vim.opt.scrolloff = 10      -- Set X lines to the cursor - when moving vertically
-vim.opt.sidescrolloff = 10  -- Same horizontally (when :set nowrap)
+vim.opt.wrap = false          -- disable code wrapping
+vim.opt.whichwrap = '<,>,[,]' -- move left/right arrows to prev/next line
+vim.opt.scrolloff = 10        -- Set X lines to the cursor - when moving vertically
+vim.opt.sidescrolloff = 10    -- Same horizontally (when :set nowrap)
 
-vim.opt.expandtab = true    -- tabs: spaces instead of tabs
-vim.opt.shiftwidth = 4      -- tabs: use 4 spaces instead tab
-vim.opt.tabstop = 4         -- tabs: displayed tab size
-vim.opt.smarttab = true     -- smarter tab placement
+vim.opt.expandtab = true      -- tabs: spaces instead of tabs
+vim.opt.shiftwidth = 4        -- tabs: use 4 spaces instead tab
+vim.opt.tabstop = 4           -- tabs: displayed tab size
+vim.opt.smarttab = true       -- smarter tab placement
 
 --filetype indent on
 vim.opt.autoindent = true
 vim.opt.smartindent = true
-vim.opt.shiftround = true     -- indentation rounded to tab size
+vim.opt.shiftround = true -- indentation rounded to tab size
 
 vim.opt.termguicolors = true
 vim.opt.background = 'dark'
@@ -400,30 +421,30 @@ vim.keymap.set('i', '<C-p>', '<C-r>+')
 vim.keymap.set('n', '<leader>bd', ':BD<CR>')
 
 -- switch to buffer by its ordinal ID
-vim.keymap.set('n', '<leader>b1', ':call lightline#bufferline#go(1)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b2', ':call lightline#bufferline#go(2)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b3', ':call lightline#bufferline#go(3)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b4', ':call lightline#bufferline#go(4)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b5', ':call lightline#bufferline#go(5)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b6', ':call lightline#bufferline#go(6)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b7', ':call lightline#bufferline#go(7)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b8', ':call lightline#bufferline#go(8)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b9', ':call lightline#bufferline#go(9)<CR>', {silent = true})
-vim.keymap.set('n', '<leader>b0', ':call lightline#bufferline#go(10)<CR>', {silent = true})
+vim.keymap.set('n', '<leader>b1', ':call lightline#bufferline#go(1)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b2', ':call lightline#bufferline#go(2)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b3', ':call lightline#bufferline#go(3)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b4', ':call lightline#bufferline#go(4)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b5', ':call lightline#bufferline#go(5)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b6', ':call lightline#bufferline#go(6)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b7', ':call lightline#bufferline#go(7)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b8', ':call lightline#bufferline#go(8)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b9', ':call lightline#bufferline#go(9)<CR>', { silent = true })
+vim.keymap.set('n', '<leader>b0', ':call lightline#bufferline#go(10)<CR>', { silent = true })
 -- jump to previous buffer
-vim.keymap.set('n', '<leader>bp', ':b#<CR>', {silent = true})
+vim.keymap.set('n', '<leader>bp', ':b#<CR>', { silent = true })
 
 -- additional motions
 -- - shift arrow in insert moves with CamelCase
-vim.keymap.set('i', '<S-Left>', '<C-o><Plug>CamelCaseMotion_b', {silent = true})
-vim.keymap.set('i', '<S-Right>', '<C-o><Plug>CamelCaseMotion_w', {silent = true})
+vim.keymap.set('i', '<S-Left>', '<C-o><Plug>CamelCaseMotion_b', { silent = true })
+vim.keymap.set('i', '<S-Right>', '<C-o><Plug>CamelCaseMotion_w', { silent = true })
 -- - operations in camel word
-vim.keymap.set('o', 'cw', '<Plug>CamelCaseMotion_w', {silent = true})
-vim.keymap.set('x', 'cw', '<Plug>CamelCaseMotion_w', {silent = true})
-vim.keymap.set('o', 'icw', '<Plug>CamelCaseMotion_iw', {silent = true})
-vim.keymap.set('x', 'icw', '<Plug>CamelCaseMotion_iw', {silent = true})
-vim.keymap.set('o', 'icb', '<Plug>CamelCaseMotion_ib', {silent = true})
-vim.keymap.set('x', 'icb', '<Plug>CamelCaseMotion_ibu', {silent = true})
+vim.keymap.set('o', 'cw', '<Plug>CamelCaseMotion_w', { silent = true })
+vim.keymap.set('x', 'cw', '<Plug>CamelCaseMotion_w', { silent = true })
+vim.keymap.set('o', 'icw', '<Plug>CamelCaseMotion_iw', { silent = true })
+vim.keymap.set('x', 'icw', '<Plug>CamelCaseMotion_iw', { silent = true })
+vim.keymap.set('o', 'icb', '<Plug>CamelCaseMotion_ib', { silent = true })
+vim.keymap.set('x', 'icb', '<Plug>CamelCaseMotion_ibu', { silent = true })
 
 -- autocomplete menu fixes:
 -- * escape closes menu
@@ -432,7 +453,7 @@ vim.keymap.set('i', '<Esc>', function()
         return '<C-e>'
     end
     return '<Esc>'
-end, {expr = true})
+end, { expr = true })
 
 -- CocNvim - use tab & enter to navigate
 vim.keymap.set('i', '<TAB>', function()
@@ -440,25 +461,25 @@ vim.keymap.set('i', '<TAB>', function()
         return vim.fn['coc#pum#next'](1)
     end
     return '<TAB>'
-end, {expr = true, silent = true})
+end, { expr = true, silent = true })
 
 vim.keymap.set('i', '<CR>', function()
     if vim.fn['coc#pum#visible']() == 1 then
         return vim.fn['coc#pum#confirm']()
     end
     return '<CR>'
-end, {expr = true, silent = true})
+end, { expr = true, silent = true })
 
 -- * start autocompletion on ctrl-space
 vim.keymap.set('i', '<C-space>', function()
     return vim.fn['coc#refresh']()
-end, {expr = true, silent = true})
+end, { expr = true, silent = true })
 
 -- code actions:
 -- * display available actions
-vim.keymap.set('n', '<leader>ca', '<Plug>(coc-codeaction-cursor)', {silent = true})
+vim.keymap.set('n', '<leader>ca', '<Plug>(coc-codeaction-cursor)', { silent = true })
 -- * display documentation
-vim.keymap.set('n', '<leader>cd', ':call CocAction("doHover")<CR>', {silent = true})
+vim.keymap.set('n', '<leader>cd', ':call CocAction("doHover")<CR>', { silent = true })
 -- * format current buffer
 vim.keymap.set(
     'n', '<leader>cf',
@@ -469,7 +490,7 @@ vim.keymap.set(
 
         print("Buffer formatted")
     end,
-    {silent = true}
+    { silent = true }
 )
 -- * jump to definition
 vim.keymap.set('n', '<leader>cj', '<Plug>(coc-definition)')
@@ -507,7 +528,7 @@ end
 
 -- remove tailing whitespaces in PHP & python files
 vim.api.nvim_create_autocmd('BufWritePre', {
-    pattern = {'*.lua', '*.php', '*.py'},
+    pattern = { '*.lua', '*.php', '*.py' },
     callback = function()
         local view = vim.fn.winsaveview()
         vim.cmd('keeppatterns %s/\\s\\+$//e')
