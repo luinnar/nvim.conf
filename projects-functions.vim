@@ -16,20 +16,24 @@ endfunction
 " Python
 function! ProjectVirtualenv(...) abort
     " add virtualenv to PATH
-    let $PATH = fnamemodify('venv/bin', ':p') . ':' . $PATH
+    " let $PATH = fnamemodify('venv/bin', ':p') . ':' . $PATH
     " set virtualenv path for CoC
-    call coc#config('python.pythonPath', fnamemodify('venv/bin/python', ':p'))
-    call coc#config('python.venvPath', fnamemodify('venv', ':p'))
+    " call coc#config('python.pythonPath', fnamemodify('venv/bin/python', ':p'))
+    " call coc#config('python.venvPath', fnamemodify('venv', ':p'))
     " skip venv dir in FZF search
     let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!venv/**'' -g ''!*.pyc'' '
+endfunction
+
+function! PythonLocalLinter(...) abort
+    lua require("lint").linters.flake8.cmd = "venv/bin/flake8"
 endfunction
 
 function! ProjectVirtualenvGcore(...) abort
     " add virtualenv to PATH
     let $PATH = fnamemodify('.venv/bin', ':p') . ':' . $PATH
     " set virtualenv path for CoC
-    call coc#config('python.pythonPath', fnamemodify('.venv/bin/python', ':p'))
-    call coc#config('python.venvPath', fnamemodify('.venv', ':p'))
+    " call coc#config('python.pythonPath', fnamemodify('.venv/bin/python', ':p'))
+    " call coc#config('python.venvPath', fnamemodify('.venv', ':p'))
     " skip venv dir in FZF search
     let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!.venv/**'' -g ''!*.pyc'' '
 endfunction

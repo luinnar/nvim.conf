@@ -42,7 +42,7 @@ Plug('MunifTanjim/nui.nvim')
 Plug('nvim-neo-tree/neo-tree.nvim')
 
 add_init(function()
-    require("neo-tree").setup({
+    require('neo-tree').setup({
         enable_diagnostics = false,
         use_popups_for_input = false,
         default_component_configs = {
@@ -52,11 +52,11 @@ add_init(function()
             },
             git_status = {
                 symbols = {
-                    untracked = "",
-                    ignored   = "󰄱",
-                    unstaged  = "",
-                    staged    = "",
-                    conflict  = "󰈅",
+                    untracked = '',
+                    ignored   = '󰄱',
+                    unstaged  = '',
+                    staged    = '',
+                    conflict  = '󰈅',
                 }
             }
         },
@@ -69,11 +69,11 @@ add_init(function()
                 hide_dotfiles = false,
                 hide_gitignored = false,
                 never_show = {
-                    ".git",
-                    "__pycache__",
+                    '.git',
+                    '__pycache__',
                 },
                 never_show_by_pattern = {
-                    "*.pyc",
+                    '*.pyc',
                 },
             },
             follow_current_file = {
@@ -88,7 +88,7 @@ end)
 -- +---------------------------------
 -- | telescope.nvim - search everywhere
 -- +---------------------------------
-Plug('nvim-telescope/telescope.nvim', { tag = '0.1.4' })
+Plug('nvim-telescope/telescope.nvim', { tag = '*' })
 Plug('nvim-telescope/telescope-fzf-native.nvim', { ['do'] = 'make' })
 
 add_init(function()
@@ -126,11 +126,11 @@ end)
 -- +---------------------------------
 -- | FZF - fuzzy search
 -- +---------------------------------
-Plug('junegunn/fzf', { ['do'] = vim.fn['fzf#install'] })
-Plug('junegunn/fzf.vim')
-
-vim.env.FZF_DEFAULT_COMMAND = 'rg --files'
-vim.env.FZF_DEFAULT_OPTS = '--ansi --layout reverse'
+-- Plug('junegunn/fzf', { ['do'] = vim.fn['fzf#install'] })
+-- Plug('junegunn/fzf.vim')
+--
+-- vim.env.FZF_DEFAULT_COMMAND = 'rg --files'
+-- vim.env.FZF_DEFAULT_OPTS = '--ansi --layout reverse'
 
 -- +---------------------------------
 -- | Ferret - multi file search
@@ -201,52 +201,147 @@ add_init(function()
 end)
 
 -- +---------------------------------
--- | CoC - autocompletion
+-- | nvim-lspconfig
 -- +---------------------------------
-Plug('neoclide/coc.nvim', { branch = 'release' })
+Plug('neovim/nvim-lspconfig')
 
-vim.g.coc_global_extensions = {
-    'coc-css',
-    'coc-elixir',
-    'coc-json',
-    'coc-lua',
-    'coc-phpls',
-    -- 'coc-pyright',
-    'coc-basedpyright',
-    'coc-snippets'
-}
+-- +---------------------------------
+-- | blink.cmp
+-- +---------------------------------
+Plug('saghen/blink.cmp', { ['tag'] = 'v1.*' })
 
--- Show signature help on placeholder jump
-vim.api.nvim_create_autocmd('User', {
-    pattern = 'CocJumpPlaceholder',
-    command = "call CocActionAsync('showSignatureHelp')"
-})
+add_init(function ()
+    require('blink.cmp').setup({
+        appearance = {
+            nerd_font_variant = 'mono',
+        },
+        completion = {
+            documentation = { auto_show = true },
+        },
+        fuzzy = {
+            implementation = 'prefer_rust_with_warning',
+        },
+        signature = {
+            enabled = true,
+        },
+        sources = {
+            default = { 'lsp', 'path', 'snippets', 'buffer' },
+        },
+        keymap = {
+            preset = 'none',
+
+            ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
+            ['<C-e>'] = { 'hide', 'fallback' },
+            ['<CR>'] = { 'accept', 'fallback' },
+
+            ['<C-j>'] = { 'snippet_forward', 'fallback' },
+            ['<C-k>'] = { 'snippet_backward', 'fallback' },
+
+            ['<Tab>'] =   { 'select_next', 'fallback' },
+            ['<S-Tab>'] = { 'select_prev', 'fallback' },
+            ['<Down>'] =  { 'select_next', 'fallback' },
+            ['<Up>'] =    { 'select_prev', 'fallback' },
+
+            ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
+            ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
+        }
+    })
+end)
 
 -- snippets
-Plug('honza/vim-snippets')
-Plug('sniphpets/sniphpets')
-Plug('sniphpets/sniphpets-common')
+Plug('rafamadriz/friendly-snippets')
+
+-- +---------------------------------
+-- | nvim-lint - lightweight linters
+-- +---------------------------------
+Plug('mfussenegger/nvim-lint')
+
+add_init(function ()
+    require('lint').linters_by_ft = {
+        php = { 'php', 'phpstan' },
+        python = { 'flake8' }
+    }
+
+    vim.api.nvim_create_autocmd(
+        {'BufWritePost', 'InsertLeave', 'TextChanged'},
+        {
+            callback = function() require('lint').try_lint() end,
+        }
+    )
+end)
+
+-- +---------------------------------
+-- | tiny-inline-diagnostic.nvim - nicer diagnostics
+-- +---------------------------------
+Plug('rachartier/tiny-inline-diagnostic.nvim')
+
+add_init(function()
+    require('tiny-inline-diagnostic').setup({
+        preset = 'powerline',
+        options = {
+            show_source = {
+                enabled = true,
+            },
+            show_code = true,
+            show_all_diags_on_cursorline = true,
+            break_line = {
+                enabled = true,
+                after = 100,
+            }
+        }
+    })
+
+    vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
+end)
+
+-- +---------------------------------
+-- | CoC - autocompletion
+-- +---------------------------------
+-- Plug('neoclide/coc.nvim', { branch = 'release' })
+--
+-- vim.g.coc_global_extensions = {
+--     'coc-css',
+--     'coc-elixir',
+--     'coc-json',
+--     'coc-lua',
+--     'coc-phpls',
+--     -- 'coc-pyright',
+--     'coc-basedpyright',
+--     'coc-snippets'
+-- }
+--
+-- -- Show signature help on placeholder jump
+-- vim.api.nvim_create_autocmd('User', {
+--     pattern = 'CocJumpPlaceholder',
+--     command = "call CocActionAsync('showSignatureHelp')"
+-- })
+--
+-- -- snippets
+-- Plug('honza/vim-snippets')
+-- Plug('sniphpets/sniphpets')
+-- Plug('sniphpets/sniphpets-common')
 
 -- +---------------------------------
 -- | CoC FZF
 -- +---------------------------------
-Plug('antoinemadec/coc-fzf')
-
-vim.g.coc_fzf_preview = 'right:50%'
+-- Plug('antoinemadec/coc-fzf')
+--
+-- vim.g.coc_fzf_preview = 'right:50%'
 
 -- +---------------------------------
 -- | ALE - syntax checking
 -- +---------------------------------
-Plug('dense-analysis/ale')
-
-vim.g.ale_sign_column_always = 1
-vim.g.ale_linters_explicit = 1
-vim.g.ale_linters = {
-    php = { 'php', 'phpstan' },
-    python = { 'flake8' }
-}
-vim.g.ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
-vim.g.ale_virtualtext_cursor = 0
+-- Plug('dense-analysis/ale')
+--
+-- vim.g.ale_disable_lsp = 1
+-- vim.g.ale_sign_column_always = 1
+-- vim.g.ale_linters_explicit = 1
+-- vim.g.ale_linters = {
+--     php = { 'php', 'phpstan' },
+--     python = { 'flake8' }
+-- }
+-- vim.g.ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
+-- vim.g.ale_virtualtext_cursor = 0
 
 -- +---------------------------------
 -- | delimitMate - insert brackets
@@ -446,6 +541,12 @@ vim.keymap.set('x', 'icw', '<Plug>CamelCaseMotion_iw', { silent = true })
 vim.keymap.set('o', 'icb', '<Plug>CamelCaseMotion_ib', { silent = true })
 vim.keymap.set('x', 'icb', '<Plug>CamelCaseMotion_ibu', { silent = true })
 
+-- disable arrows
+vim.keymap.set({'i', 'n', 'v'}, '<Up>', '<Nop>')
+vim.keymap.set({'i', 'n', 'v'}, '<Down>', '<Nop>')
+vim.keymap.set({'i', 'n', 'v'}, '<Left>', '<Nop>')
+vim.keymap.set({'i', 'n', 'v'}, '<Right>', '<Nop>')
+
 -- autocomplete menu fixes:
 -- * escape closes menu
 vim.keymap.set('i', '<Esc>', function()
@@ -456,50 +557,44 @@ vim.keymap.set('i', '<Esc>', function()
 end, { expr = true })
 
 -- CocNvim - use tab & enter to navigate
-vim.keymap.set('i', '<TAB>', function()
-    if vim.fn['coc#pum#visible']() == 1 then
-        return vim.fn['coc#pum#next'](1)
-    end
-    return '<TAB>'
-end, { expr = true, silent = true })
-
-vim.keymap.set('i', '<CR>', function()
-    if vim.fn['coc#pum#visible']() == 1 then
-        return vim.fn['coc#pum#confirm']()
-    end
-    return '<CR>'
-end, { expr = true, silent = true })
+-- vim.keymap.set('i', '<TAB>', function()
+--     if vim.fn['coc#pum#visible']() == 1 then
+--         return vim.fn['coc#pum#next'](1)
+--     end
+--     return '<TAB>'
+-- end, { expr = true, silent = true })
+--
+-- vim.keymap.set('i', '<CR>', function()
+--     if vim.fn['coc#pum#visible']() == 1 then
+--         return vim.fn['coc#pum#confirm']()
+--     end
+--     return '<CR>'
+-- end, { expr = true, silent = true })
 
 -- * start autocompletion on ctrl-space
-vim.keymap.set('i', '<C-space>', function()
-    return vim.fn['coc#refresh']()
-end, { expr = true, silent = true })
+-- vim.keymap.set('i', '<C-space>', function()
+--     return vim.fn['coc#refresh']()
+-- end, { expr = true, silent = true })
 
 -- code actions:
 -- * display available actions
 vim.keymap.set('n', '<leader>ca', '<Plug>(coc-codeaction-cursor)', { silent = true })
 -- * display documentation
-vim.keymap.set('n', '<leader>cd', ':call CocAction("doHover")<CR>', { silent = true })
+vim.keymap.set('n', '<leader>cd', function() vim.lsp.buf.hover() end, { silent = true })
 -- * format current buffer
-vim.keymap.set(
-    'n', '<leader>cf',
-    function()
-        if not require('conform').format() then
-            vim.fn.CocActionAsync('format')
-        end
-
-        print("Buffer formatted")
-    end,
-    { silent = true }
-)
+vim.keymap.set('n', '<leader>cf', function()
+    if not require('conform').format() then
+        vim.lsp.buf.format()
+    end
+end, { silent = true })
 -- * jump to definition
-vim.keymap.set('n', '<leader>cj', '<Plug>(coc-definition)')
+vim.keymap.set('n', '<leader>cj', function() vim.lsp.buf.definition() end)
 -- * refactor/move item
-vim.keymap.set('n', '<leader>cm', '<Plug>(coc-refactor)')
+--vim.keymap.set('n', '<leader>cm', '<Plug>(coc-refactor)')
 -- * rename item
-vim.keymap.set('n', '<leader>cr', '<Plug>(coc-rename)')
+vim.keymap.set('n', '<leader>cr', '<cmd>lua vim.lsp.buf.rename()<CR>') -- function() vim.lsp.buf.rename() end)
 -- * show usage
-vim.keymap.set('n', '<leader>cu', '<Plug>(coc-references)')
+vim.keymap.set('n', '<leader>cu', ':Telescope lsp_references<CR>')
 
 -- * PYTHON add docstring
 vim.api.nvim_create_autocmd('FileType', {
@@ -521,6 +616,12 @@ for i, init_fn in ipairs(init_functions) do
     init_fn()
 end
 
+vim.lsp.enable({
+    -- 'basedpyright',
+    'glsl_analyzer',
+    'lua_ls',
+    'ty',
+})
 
 -- +=================================
 -- | Auto commands
