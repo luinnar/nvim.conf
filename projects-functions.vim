@@ -38,6 +38,10 @@ function! ProjectVirtualenvGcore(...) abort
     let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs -g ''!.venv/**'' -g ''!*.pyc'' '
 endfunction
 
+function! OpenStackSettings(...) abort
+    set colorcolumn=80
+endfunction
+
 function! LoadSession(...) abort
     execute 'AutoSession restore'
 endfunction

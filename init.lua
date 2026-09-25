@@ -119,6 +119,7 @@ add_init(function()
         require('telescope').load_extension('fzf')
     end
 
+    vim.keymap.set('n', '<leader>fb', builtin.buffers)
     vim.keymap.set('n', '<leader>ff', builtin.find_files)
     vim.keymap.set('n', '<leader>fg', builtin.live_grep)
 end)
@@ -549,12 +550,12 @@ vim.keymap.set({'i', 'n', 'v'}, '<Right>', '<Nop>')
 
 -- autocomplete menu fixes:
 -- * escape closes menu
-vim.keymap.set('i', '<Esc>', function()
-    if vim.fn.pumvisible() == 1 then
-        return '<C-e>'
-    end
-    return '<Esc>'
-end, { expr = true })
+-- vim.keymap.set('i', '<Esc>', function()
+--     if vim.fn.pumvisible() == 1 then
+--         return '<C-e>'
+--     end
+--     return '<Esc>'
+-- end, { expr = true })
 
 -- CocNvim - use tab & enter to navigate
 -- vim.keymap.set('i', '<TAB>', function()
@@ -588,13 +589,13 @@ vim.keymap.set('n', '<leader>cf', function()
     end
 end, { silent = true })
 -- * jump to definition
-vim.keymap.set('n', '<leader>cj', function() vim.lsp.buf.definition() end)
+vim.keymap.set('n', '<leader>cj', require('telescope.builtin').lsp_definitions)
 -- * refactor/move item
 --vim.keymap.set('n', '<leader>cm', '<Plug>(coc-refactor)')
 -- * rename item
 vim.keymap.set('n', '<leader>cr', '<cmd>lua vim.lsp.buf.rename()<CR>') -- function() vim.lsp.buf.rename() end)
 -- * show usage
-vim.keymap.set('n', '<leader>cu', ':Telescope lsp_references<CR>')
+vim.keymap.set('n', '<leader>cu', require('telescope.builtin').lsp_references)
 
 -- * PYTHON add docstring
 vim.api.nvim_create_autocmd('FileType', {
@@ -621,6 +622,7 @@ vim.lsp.enable({
     'glsl_analyzer',
     'lua_ls',
     'ty',
+    'zls',
 })
 
 -- +=================================
