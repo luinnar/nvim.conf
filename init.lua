@@ -1,454 +1,412 @@
 -- +=================================
 -- | HELPERS
 -- +=================================
-
-local Plug = vim.fn['plug#']
-
-local init_functions = {}
-
-function add_init(fn)
-    table.insert(init_functions, fn)
-end
+local PluginConfig = require("plugins")
 
 -- +=================================
 -- | PLUGINS
 -- +=================================
-vim.call('plug#begin', '~/.local/share/nvim/plugged')
+local plugin_config = PluginConfig.New()
 
-Plug('nvim-lua/plenary.nvim')    -- utilities functions for LUA projects
-Plug('lambdalisue/nerdfont.vim') -- additional icons in fonts
-Plug('itchyny/vim-gitbranch')    -- function to get current git branch
+:add("https://github.com/nvim-lua/plenary.nvim")    -- utilities functions for LUA projects
+:add("https://github.com/lambdalisue/nerdfont.vim") -- additional icons in fonts
+:add("https://github.com/itchyny/vim-gitbranch")    -- function to get current git branch
 
 -- +---------------------------------
 -- | indentLine - indentation lines
 -- +---------------------------------
-Plug('Yggdroot/indentLine')
-
-vim.g.vim_json_conceal = 0 -- disable conceal for JSON files
+:add(
+    "https://github.com/Yggdroot/indentLine",
+    function ()
+        vim.g.vim_json_conceal = 0 -- disable conceal for JSON files
+    end
+)
 
 -- +---------------------------------
 -- | Projects - project view
 -- +---------------------------------
 -- Plug 'amiorin/vim-project'
-Plug('luinnar/vim-project')
-
-vim.g.project_enable_welcome = 1
-vim.g.project_use_neotree = 1
+:add(
+    "https://github.com/luinnar/vim-project",
+    function ()
+        vim.g.project_enable_welcome = 1
+        vim.g.project_use_neotree = 1
+    end
+)
 
 -- +---------------------------------
 -- | Neo-tree - file browser
 -- +---------------------------------
-Plug('MunifTanjim/nui.nvim')
-Plug('nvim-neo-tree/neo-tree.nvim')
-
-add_init(function()
-    require('neo-tree').setup({
-        enable_diagnostics = false,
-        use_popups_for_input = false,
-        default_component_configs = {
-            name = {
-                trailing_slash = true,
-                use_git_status_colors = false,
-            },
-            git_status = {
-                symbols = {
-                    untracked = '',
-                    ignored   = '󰄱',
-                    unstaged  = '',
-                    staged    = '',
-                    conflict  = '󰈅',
+:add(
+    "https://github.com/nvim-neo-tree/neo-tree.nvim",
+    function ()
+        require('neo-tree').setup({
+            enable_diagnostics = false,
+            use_popups_for_input = false,
+            default_component_configs = {
+                name = {
+                    trailing_slash = true,
+                    use_git_status_colors = false,
+                },
+                git_status = {
+                    symbols = {
+                        untracked = '',
+                        ignored   = '󰄱',
+                        unstaged  = '',
+                        staged    = '',
+                        conflict  = '󰈅',
+                    }
                 }
-            }
-        },
-        window = {
-            width = 45,
-        },
-        filesystem = {
-            filtered_items = {
-                visible = true,
-                hide_dotfiles = false,
-                hide_gitignored = false,
-                never_show = {
-                    '.git',
-                    '__pycache__',
-                },
-                never_show_by_pattern = {
-                    '*.pyc',
-                },
             },
-            follow_current_file = {
-                enabled = true,
-                leave_dirs_open = false,
+            window = {
+                width = 45,
             },
-            use_libuv_file_watcher = true,
-        },
-    })
-end)
+            filesystem = {
+                filtered_items = {
+                    visible = true,
+                    hide_dotfiles = false,
+                    hide_gitignored = false,
+                    never_show = {
+                        '.git',
+                        '__pycache__',
+                    },
+                    never_show_by_pattern = {
+                        '*.pyc',
+                    },
+                },
+                follow_current_file = {
+                    enabled = true,
+                    leave_dirs_open = false,
+                },
+                use_libuv_file_watcher = true,
+            },
+        })
+    end,
+    nil,
+    {
+        "https://github.com/MunifTanjim/nui.nvim" -- UI library
+    }
+)
 
 -- +---------------------------------
 -- | telescope.nvim - search everywhere
 -- +---------------------------------
-Plug('nvim-telescope/telescope.nvim', { tag = '*' })
-Plug('nvim-telescope/telescope-fzf-native.nvim', { ['do'] = 'make' })
+:add(
+    "https://github.com/nvim-telescope/telescope.nvim",
+    function ()
+        local actions = require('telescope.actions')
+        local builtin = require('telescope.builtin')
 
-add_init(function()
-    local actions = require('telescope.actions')
-    local builtin = require('telescope.builtin')
+        require('telescope').setup({
+            defaults = {
+                layout_config = {
+                    height = 0.6,
+                },
+                mappings = {
+                    i = {
+                        ['<esc>'] = actions.close
+                    }
+                },
+            },
+            extensions = {
+                fzf = {
+                    fuzzy = true,                   -- false will only do exact matching
+                    override_generic_sorter = true, -- override the generic sorter
+                    override_file_sorter = true,    -- override the file sorter
+                },
+            },
+        })
 
-    require('telescope').setup({
-        defaults = {
-            layout_config = {
-                height = 0.6,
-            },
-            mappings = {
-                i = {
-                    ['<esc>'] = actions.close
-                }
-            },
-        },
-        extensions = {
-            fzf = {
-                fuzzy = true,                   -- false will only do exact matching
-                override_generic_sorter = true, -- override the generic sorter
-                override_file_sorter = true,    -- override the file sorter
-            },
-        },
-    })
-
-    if pcall(require, 'fzf_lib') then
-        require('telescope').load_extension('fzf')
+        vim.keymap.set('n', '<leader>fb', builtin.buffers)
+        vim.keymap.set('n', '<leader>ff', builtin.find_files)
+        vim.keymap.set('n', '<leader>fg', builtin.live_grep)
     end
-
-    vim.keymap.set('n', '<leader>fb', builtin.buffers)
-    vim.keymap.set('n', '<leader>ff', builtin.find_files)
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep)
-end)
-
--- +---------------------------------
--- | FZF - fuzzy search
--- +---------------------------------
--- Plug('junegunn/fzf', { ['do'] = vim.fn['fzf#install'] })
--- Plug('junegunn/fzf.vim')
---
--- vim.env.FZF_DEFAULT_COMMAND = 'rg --files'
--- vim.env.FZF_DEFAULT_OPTS = '--ansi --layout reverse'
-
--- +---------------------------------
--- | Ferret - multi file search
--- +---------------------------------
-Plug('wincent/ferret')
-
-vim.g.FerretMap = 0
+)
+:add(
+    "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+    function ()
+        if pcall(require, 'fzf_lib') then
+            require('telescope').load_extension('fzf')
+        end
+    end,
+    function (event)
+        vim.system({ 'make' }, { cwd = event.data.path }):wait()
+    end
+)
 
 -- +---------------------------------
 -- | LightLine - status & tab lines on steroids
 -- +---------------------------------
-Plug('itchyny/lightline.vim')
-Plug('mengelbrecht/lightline-bufferline')
-
-vim.g.lightline = {
-    active = {
-        left = {
-            { 'mode',     'paste' },
-            { 'readonly', 'filename', 'modified' },
-        },
-        right = {
-            { 'lineinfo' },
-            { 'percent' },
-            { 'fileformat', 'fileencoding', 'filetype' },
-            { 'gitbranch' }
+:add(
+    "https://github.com/itchyny/lightline.vim",
+    function ()
+        vim.g.lightline = {
+            active = {
+                left = {
+                    { "mode",     "paste" },
+                    { "readonly", "filename", "modified" },
+                },
+                right = {
+                    { "lineinfo" },
+                    { "percent" },
+                    { "fileformat", "fileencoding", "filetype" },
+                    { "gitbranch" }
+                }
+            },
+            tabline = {
+                left = {
+                    { "buffers" }
+                },
+            },
+            component_expand = {
+                buffers = "lightline#bufferline#buffers"
+            },
+            component_function = {
+                gitbranch = "gitbranch#name"
+            },
+            component_type = {
+                buffers = "tabsel"
+            },
+            separator = { left = "\u{e0b8}", right = "\u{e0ba}" },
+            subseparator = { left = "\u{e0b9}", right = "\u{e0bd}" }
         }
-    },
-    tabline = {
-        left = {
-            { 'buffers' }
-        },
-    },
-    component_expand = {
-        buffers = 'lightline#bufferline#buffers'
-    },
-    component_function = {
-        gitbranch = 'gitbranch#name'
-    },
-    component_type = {
-        buffers = 'tabsel'
-    },
-    separator = { left = "\u{e0b8}", right = "\u{e0ba}" },
-    subseparator = { left = "\u{e0b9}", right = "\u{e0bd}" }
-}
 
-vim.g['lightline#bufferline#enable_nerdfont'] = 1
-vim.g['lightline#bufferline#modified'] = ' \u{f111}'
-vim.g['lightline#bufferline#show_number'] = 2
-
+        vim.g["lightline#bufferline#enable_nerdfont"] = 1
+        vim.g["lightline#bufferline#modified"] = " \u{f111}"
+        vim.g["lightline#bufferline#show_number"] = 2
+    end,
+    nil,
+    {
+        "https://github.com/mengelbrecht/lightline-bufferline" -- buffer line support
+    }
+)
 -- +---------------------------------
 -- | BuffKill - handle buffers without changes in layout
 -- +---------------------------------
-Plug('qpkorr/vim-bufkill')
+:add("https://github.com/qpkorr/vim-bufkill")
 
 -- +---------------------------------
 -- | conform.nvim - code formatting
 -- +---------------------------------
-Plug('stevearc/conform.nvim')
-
-add_init(function()
-    require('conform').setup({
-        formatters_by_ft = {
-            lua = {},
-            python = { 'isort', 'ruff_format' },
-            zig = { 'zigfmt' },
-        },
-    })
-end)
+:add(
+    "https://github.com/stevearc/conform.nvim",
+    function()
+        require("conform").setup({
+            formatters_by_ft = {
+                lua = {},
+                python = { "isort", "ruff_format" },
+                zig = { "zigfmt" },
+            },
+        })
+    end
+)
 
 -- +---------------------------------
 -- | nvim-lspconfig
 -- +---------------------------------
-Plug('neovim/nvim-lspconfig')
+:add("https://github.com/neovim/nvim-lspconfig")
 
 -- +---------------------------------
 -- | blink.cmp
 -- +---------------------------------
-Plug('saghen/blink.cmp', { ['tag'] = 'v1.*' })
+:add(
+    { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("v1") },
+    function ()
+        require("blink.cmp").setup({
+            appearance = {
+                nerd_font_variant = "mono",
+            },
+            completion = {
+                documentation = { auto_show = true },
+            },
+            fuzzy = {
+                implementation = "prefer_rust_with_warning",
+            },
+            signature = {
+                enabled = true,
+            },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+            keymap = {
+                preset = "none",
 
-add_init(function ()
-    require('blink.cmp').setup({
-        appearance = {
-            nerd_font_variant = 'mono',
-        },
-        completion = {
-            documentation = { auto_show = true },
-        },
-        fuzzy = {
-            implementation = 'prefer_rust_with_warning',
-        },
-        signature = {
-            enabled = true,
-        },
-        sources = {
-            default = { 'lsp', 'path', 'snippets', 'buffer' },
-        },
-        keymap = {
-            preset = 'none',
+                ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+                ["<C-e>"] = { "hide", "fallback" },
+                ["<CR>"] = { "accept", "fallback" },
 
-            ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-            ['<C-e>'] = { 'hide', 'fallback' },
-            ['<CR>'] = { 'accept', 'fallback' },
+                ["<C-j>"] = { "snippet_forward", "fallback" },
+                ["<C-k>"] = { "snippet_backward", "fallback" },
 
-            ['<C-j>'] = { 'snippet_forward', 'fallback' },
-            ['<C-k>'] = { 'snippet_backward', 'fallback' },
+                ["<Tab>"] =   { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ["<Down>"] =  { "select_next", "fallback" },
+                ["<Up>"] =    { "select_prev", "fallback" },
 
-            ['<Tab>'] =   { 'select_next', 'fallback' },
-            ['<S-Tab>'] = { 'select_prev', 'fallback' },
-            ['<Down>'] =  { 'select_next', 'fallback' },
-            ['<Up>'] =    { 'select_prev', 'fallback' },
-
-            ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
-            ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
-        }
-    })
-end)
-
--- snippets
-Plug('rafamadriz/friendly-snippets')
+                ["<C-b>"] = { "scroll_documentation_up", "fallback" },
+                ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+            }
+        })
+    end,
+    nil,
+    {
+        "https://github.com/rafamadriz/friendly-snippets" -- snippets
+    }
+)
 
 -- +---------------------------------
 -- | nvim-lint - lightweight linters
 -- +---------------------------------
-Plug('mfussenegger/nvim-lint')
-
-add_init(function ()
-    require('lint').linters_by_ft = {
-        php = { 'php', 'phpstan' },
-        python = { 'flake8' }
-    }
-
-    vim.api.nvim_create_autocmd(
-        {'BufWritePost', 'InsertLeave', 'TextChanged'},
-        {
-            callback = function() require('lint').try_lint() end,
+:add(
+    "https://github.com/mfussenegger/nvim-lint",
+    function ()
+        require('lint').linters_by_ft = {
+            php = { 'php', 'phpstan' },
+            python = { 'flake8' }
         }
-    )
-end)
+
+        vim.api.nvim_create_autocmd(
+            {'BufWritePost', 'InsertLeave', 'TextChanged'},
+            { callback = function() require('lint').try_lint() end }
+        )
+    end
+)
 
 -- +---------------------------------
 -- | tiny-inline-diagnostic.nvim - nicer diagnostics
 -- +---------------------------------
-Plug('rachartier/tiny-inline-diagnostic.nvim')
-
-add_init(function()
-    require('tiny-inline-diagnostic').setup({
-        preset = 'powerline',
-        options = {
-            show_source = {
-                enabled = true,
-            },
-            show_code = true,
-            show_all_diags_on_cursorline = true,
-            break_line = {
-                enabled = true,
-                after = 100,
+:add(
+    "https://github.com/rachartier/tiny-inline-diagnostic.nvim",
+    function()
+        require("tiny-inline-diagnostic").setup({
+            preset = "powerline",
+            options = {
+                show_source = {
+                    enabled = true,
+                },
+                show_code = true,
+                show_all_diags_on_cursorline = true,
+                break_line = {
+                    enabled = true,
+                    after = 100,
+                }
             }
-        }
-    })
+        })
 
-    vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
-end)
-
--- +---------------------------------
--- | CoC - autocompletion
--- +---------------------------------
--- Plug('neoclide/coc.nvim', { branch = 'release' })
---
--- vim.g.coc_global_extensions = {
---     'coc-css',
---     'coc-elixir',
---     'coc-json',
---     'coc-lua',
---     'coc-phpls',
---     -- 'coc-pyright',
---     'coc-basedpyright',
---     'coc-snippets'
--- }
---
--- -- Show signature help on placeholder jump
--- vim.api.nvim_create_autocmd('User', {
---     pattern = 'CocJumpPlaceholder',
---     command = "call CocActionAsync('showSignatureHelp')"
--- })
---
--- -- snippets
--- Plug('honza/vim-snippets')
--- Plug('sniphpets/sniphpets')
--- Plug('sniphpets/sniphpets-common')
-
--- +---------------------------------
--- | CoC FZF
--- +---------------------------------
--- Plug('antoinemadec/coc-fzf')
---
--- vim.g.coc_fzf_preview = 'right:50%'
-
--- +---------------------------------
--- | ALE - syntax checking
--- +---------------------------------
--- Plug('dense-analysis/ale')
---
--- vim.g.ale_disable_lsp = 1
--- vim.g.ale_sign_column_always = 1
--- vim.g.ale_linters_explicit = 1
--- vim.g.ale_linters = {
---     php = { 'php', 'phpstan' },
---     python = { 'flake8' }
--- }
--- vim.g.ale_echo_msg_format = '[%linter%][%severity%]%[code]% %s'
--- vim.g.ale_virtualtext_cursor = 0
+        vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
+    end
+)
 
 -- +---------------------------------
 -- | delimitMate - insert brackets
 -- +---------------------------------
-Plug('Raimondi/delimitMate')
-
-vim.g.delimitMate_expand_cr = 1
+:add(
+    "https://github.com/Raimondi/delimitMate",
+    function ()
+        vim.g.delimitMate_expand_cr = 1
+    end
+)
 
 -- +---------------------------------
 -- | CamelCaseMotion - text objects for camel case
 -- +---------------------------------
-Plug('bkad/CamelCaseMotion')
+:add("https://github.com/bkad/CamelCaseMotion")
 
 -- +---------------------------------
 -- | Spelunker.vim - better spellchecks
 -- +---------------------------------
-Plug('kamykn/spelunker.vim')
-
-vim.g.spelunker_check_type = 2
-vim.g.spelunker_spell_bad_group = 'SpellBad'
-vim.g.spelunker_target_min_char_len = 3
-
--- +---------------------------------
--- | auto.session - save sessions
--- +---------------------------------
--- Plug('rmagatti/auto-session')
---
--- add_init(function()
---     require("auto-session").setup({
---         auto_restore = false,
---         cwd_change_handling = true,
---         pre_save_cmds = { 'Neotree close' },
---         --post_restore_cmds = { 'Neotree focus' },
---     })
--- end)
---
--- vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+:add(
+    "https://github.com/kamykn/spelunker.vim",
+    function ()
+        vim.g.spelunker_check_type = 2
+        vim.g.spelunker_spell_bad_group = "SpellBad"
+        vim.g.spelunker_target_min_char_len = 3
+    end
+)
 
 -- +=================================
 -- | LANGUAGE SPECIFIC
 -- +---------------------------------
 -- | Elixir
 -- +---------------------------------
-Plug('elixir-editors/vim-elixir')
+:add("https://github.com/elixir-editors/vim-elixir")
 
 -- +---------------------------------
 -- | GLSL
 -- +---------------------------------
-Plug 'tikhomirov/vim-glsl'
+:add("https://github.com/tikhomirov/vim-glsl")
 
 -- +---------------------------------
 -- | GODOT
 -- +---------------------------------
-Plug('habamax/vim-godot')
+:add("https://github.com/habamax/vim-godot")
 
 -- +---------------------------------
 -- | MARKDOWN extended support
 -- +---------------------------------
-Plug('plasticboy/vim-markdown')
-
-vim.g.vim_markdown_conceal = 0                 -- disable hiding MD syntax
-vim.g.vim_markdown_conceal_code_blocks = 0     -- disable hiding code syntax
-vim.g.vim_markdown_folding_disabled = 1        -- disable folding
-vim.g.vim_markdown_no_default_key_mappings = 1 -- no key mapping
-vim.g.vim_markdown_fenced_languages = { 'yml=yaml', 'viml=vim', 'bash=sh', 'ini=dosini' }
+:add(
+    "https://github.com/plasticboy/vim-markdown",
+    function ()
+        vim.g.vim_markdown_conceal = 0                 -- disable hiding MD syntax
+        vim.g.vim_markdown_conceal_code_blocks = 0     -- disable hiding code syntax
+        vim.g.vim_markdown_folding_disabled = 1        -- disable folding
+        vim.g.vim_markdown_no_default_key_mappings = 1 -- no key mapping
+        vim.g.vim_markdown_fenced_languages = { "yml=yaml", "viml=vim", "bash=sh", "ini=dosini" }
+    end
+)
 
 -- +=================================
 -- | OPENSCAD
 -- +---------------------------------
 -- | Syntax highlight
 -- +---------------------------------
-Plug('sirtaj/vim-openscad')
+:add("https://github.com/sirtaj/vim-openscad")
 
 -- +=================================
 -- | PYTHON
 -- +---------------------------------
 -- | better syntax highlighting for python
 -- +---------------------------------
-Plug('vim-python/python-syntax')
-
-vim.g.python_highlight_all = 1
+:add(
+    "https://github.com/vim-python/python-syntax",
+    function ()
+        vim.g.python_highlight_all = 1
+    end
+)
 
 -- +---------------------------------
 -- | PyDocString - doc-string generator
 -- +---------------------------------
-Plug('heavenshell/vim-pydocstring', { ['do'] = 'make install', ['for'] = 'python' })
-
-vim.g.pydocstring_templates_path = vim.fn.stdpath('config') .. '/pydocstring'
+:add(
+    "https://github.com/heavenshell/vim-pydocstring",
+    function ()
+        vim.g.pydocstring_templates_path = vim.fn.stdpath("config") .. "/pydocstring"
+    end,
+    function (event)
+        vim.system({ 'make install' }, { cwd = event.data.path }):wait()
+    end
+)
 
 -- +=================================
 -- | Zig
 -- +---------------------------------
 -- | syntax highlighting for Zig
 -- +---------------------------------
-Plug('ziglang/zig.vim')
-
-vim.g.zig_fmt_parse_errors = 0
-vim.g.zig_fmt_autosave = 0
+:add(
+    "https://github.com/ziglang/zig.vim",
+    function ()
+        vim.g.zig_fmt_parse_errors = 0
+        vim.g.zig_fmt_autosave = 0
+    end
+)
 
 -- +---------------------------------
 -- | SKINS
 -- +---------------------------------
-Plug('morhetz/gruvbox')
-Plug('luinnar/vim-neo-spider')
+:add("https://github.com/morhetz/gruvbox")
+:add("https://github.com/luinnar/vim-neo-spider")
 
-vim.call('plug#end')
+:apply()
 
 -- +=================================
 -- | VIM settings
@@ -548,38 +506,7 @@ vim.keymap.set({'i', 'n', 'v'}, '<Down>', '<Nop>')
 vim.keymap.set({'i', 'n', 'v'}, '<Left>', '<Nop>')
 vim.keymap.set({'i', 'n', 'v'}, '<Right>', '<Nop>')
 
--- autocomplete menu fixes:
--- * escape closes menu
--- vim.keymap.set('i', '<Esc>', function()
---     if vim.fn.pumvisible() == 1 then
---         return '<C-e>'
---     end
---     return '<Esc>'
--- end, { expr = true })
-
--- CocNvim - use tab & enter to navigate
--- vim.keymap.set('i', '<TAB>', function()
---     if vim.fn['coc#pum#visible']() == 1 then
---         return vim.fn['coc#pum#next'](1)
---     end
---     return '<TAB>'
--- end, { expr = true, silent = true })
---
--- vim.keymap.set('i', '<CR>', function()
---     if vim.fn['coc#pum#visible']() == 1 then
---         return vim.fn['coc#pum#confirm']()
---     end
---     return '<CR>'
--- end, { expr = true, silent = true })
-
--- * start autocompletion on ctrl-space
--- vim.keymap.set('i', '<C-space>', function()
---     return vim.fn['coc#refresh']()
--- end, { expr = true, silent = true })
-
 -- code actions:
--- * display available actions
-vim.keymap.set('n', '<leader>ca', '<Plug>(coc-codeaction-cursor)', { silent = true })
 -- * display documentation
 vim.keymap.set('n', '<leader>cd', function() vim.lsp.buf.hover() end, { silent = true })
 -- * format current buffer
@@ -590,8 +517,6 @@ vim.keymap.set('n', '<leader>cf', function()
 end, { silent = true })
 -- * jump to definition
 vim.keymap.set('n', '<leader>cj', require('telescope.builtin').lsp_definitions)
--- * refactor/move item
---vim.keymap.set('n', '<leader>cm', '<Plug>(coc-refactor)')
 -- * rename item
 vim.keymap.set('n', '<leader>cr', '<cmd>lua vim.lsp.buf.rename()<CR>') -- function() vim.lsp.buf.rename() end)
 -- * show usage
@@ -608,17 +533,7 @@ vim.api.nvim_create_autocmd('FileType', {
 -- Neotree actions
 vim.keymap.set('n', '<leader>tt', ':Neotree focus<CR>')
 
--- find operations
-vim.keymap.set('n', '<leader><S-F>', '<Plug>(FerretAck)')
-
-
--- run all initializers
-for i, init_fn in ipairs(init_functions) do
-    init_fn()
-end
-
 vim.lsp.enable({
-    -- 'basedpyright',
     'glsl_analyzer',
     'lua_ls',
     'ty',
@@ -629,7 +544,7 @@ vim.lsp.enable({
 -- | Auto commands
 -- +=================================
 
--- remove tailing whitespaces in PHP & python files
+-- remove tailing whitespaces in code
 vim.api.nvim_create_autocmd('BufWritePre', {
     pattern = { '*.lua', '*.php', '*.py' },
     callback = function()

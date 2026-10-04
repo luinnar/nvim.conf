@@ -1,0 +1,129 @@
+{
+  "plugins": {
+    "CamelCaseMotion": {
+      "rev": "e69b0024f8f63db10c5d0df26d4920760755d454",
+      "src": "https://github.com/bkad/CamelCaseMotion"
+    },
+    "blink.cmp": {
+      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
+      "src": "https://github.com/saghen/blink.cmp",
+      "version": "1.0.0 - 2.0.0"
+    },
+    "conform.nvim": {
+      "rev": "016802de402556da54c36bd7359b441266b01cdd",
+      "src": "https://github.com/stevearc/conform.nvim"
+    },
+    "delimitMate": {
+      "rev": "becbd2d353a2366171852387288ebb4b33a02487",
+      "src": "https://github.com/Raimondi/delimitMate"
+    },
+    "friendly-snippets": {
+      "rev": "b4d01b0fdf3c9a549961c2f9ffe8dc09be166219",
+      "src": "https://github.com/rafamadriz/friendly-snippets"
+    },
+    "gruvbox": {
+      "rev": "ef8864bb42bf244f0295d1c5a403b27e3d139695",
+      "src": "https://github.com/morhetz/gruvbox"
+    },
+    "indentLine": {
+      "rev": "b96a75985736da969ac38b72a7716a8c57bdde98",
+      "src": "https://github.com/Yggdroot/indentLine"
+    },
+    "lightline-bufferline": {
+      "rev": "8206632c2e399c6bbf348fa2f8de22788a960629",
+      "src": "https://github.com/mengelbrecht/lightline-bufferline"
+    },
+    "lightline.vim": {
+      "rev": "671007c675eca49a2c5e449fc9da998137d4e500",
+      "src": "https://github.com/itchyny/lightline.vim"
+    },
+    "neo-tree.nvim": {
+      "rev": "020e50ff7fdaa0d76de23cfe5c485504729483b0",
+      "src": "https://github.com/nvim-neo-tree/neo-tree.nvim"
+    },
+    "nerdfont.vim": {
+      "rev": "3a28b3f061a8b6de751175cc3f91f072d4bfc811",
+      "src": "https://github.com/lambdalisue/nerdfont.vim"
+    },
+    "nui.nvim": {
+      "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
+      "src": "https://github.com/MunifTanjim/nui.nvim"
+    },
+    "nvim-lint": {
+      "rev": "3d55c8f67c6ae5c15e1042571e107c7a3d5c5f4e",
+      "src": "https://github.com/mfussenegger/nvim-lint"
+    },
+    "nvim-lspconfig": {
+      "rev": "3e8d598d3b5f8338a41699c436e5fa11d2666cf0",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "plenary.nvim": {
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "python-syntax": {
+      "rev": "2cc00ba72929ea5f9456a26782db57fb4cc56a65",
+      "src": "https://github.com/vim-python/python-syntax"
+    },
+    "spelunker.vim": {
+      "rev": "a0bc530f62798bbe053905555a4aa9ed713485eb",
+      "src": "https://github.com/kamykn/spelunker.vim"
+    },
+    "telescope-fzf-native.nvim": {
+      "rev": "b25b749b9db64d375d782094e2b9dce53ad53a40",
+      "src": "https://github.com/nvim-telescope/telescope-fzf-native.nvim"
+    },
+    "telescope.nvim": {
+      "rev": "40aedd8a68c78a656a10a8d62d80c54af59420fb",
+      "src": "https://github.com/nvim-telescope/telescope.nvim"
+    },
+    "tiny-inline-diagnostic.nvim": {
+      "rev": "6264451f14119d63a52580e5198d6baf8518b0b2",
+      "src": "https://github.com/rachartier/tiny-inline-diagnostic.nvim"
+    },
+    "vim-bufkill": {
+      "rev": "3113181d0c1bfb8719f3ddcd2e2f35a8d763d1e5",
+      "src": "https://github.com/qpkorr/vim-bufkill"
+    },
+    "vim-elixir": {
+      "rev": "6dff29176eb35e025bc94b262bf6d4e517e11f7d",
+      "src": "https://github.com/elixir-editors/vim-elixir"
+    },
+    "vim-gitbranch": {
+      "rev": "1a8ba866f3eaf0194783b9f8573339d6ede8f1ed",
+      "src": "https://github.com/itchyny/vim-gitbranch"
+    },
+    "vim-glsl": {
+      "rev": "40dd0b143ef93f3930a8a409f60c1bb85e28b727",
+      "src": "https://github.com/tikhomirov/vim-glsl"
+    },
+    "vim-godot": {
+      "rev": "2cecd0c83a7b3f012142a584d53a3a51be246c8e",
+      "src": "https://github.com/habamax/vim-godot"
+    },
+    "vim-markdown": {
+      "rev": "1bc9d0cd8e1cc3e901b0a49c2b50a843f1c89397",
+      "src": "https://github.com/plasticboy/vim-markdown"
+    },
+    "vim-neo-spider": {
+      "rev": "c809f39df09fd10f9a198a788776542411c1ff5b",
+      "src": "https://github.com/luinnar/vim-neo-spider"
+    },
+    "vim-openscad": {
+      "rev": "11ed125209e2277d439cf6d0340c6fca263cb09b",
+      "src": "https://github.com/sirtaj/vim-openscad"
+    },
+    "vim-project": {
+      "rev": "c614f61ae84c0cff025e81037dc09d0afaa2528b",
+      "src": "https://github.com/luinnar/vim-project"
+    },
+    "vim-pydocstring": {
+      "rev": "9da38e1bb70f5fc9f35ba5abf8ddada81fe2717a",
+      "src": "https://github.com/heavenshell/vim-pydocstring"
+    },
+    "zig.vim": {
+      "rev": "1a1112eec20e28c832a06ddb1d0060f6ce652372",
+      "src": "https://github.com/ziglang/zig.vim"
+    }
+  }
+}
